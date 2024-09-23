@@ -1,66 +1,135 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+```markdown
+# Apartment Search API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This API allows users to search for available apartments based on various filters. It is built using Laravel and provides endpoints to retrieve apartment listings.
 
-## About Laravel
+## Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Getting Started](#getting-started)
+- [API Endpoints](#api-endpoints)
+  - [Search Apartments](#search-apartments)
+- [Filters](#filters)
+- [Response Format](#response-format)
+- [Error Handling](#error-handling)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Getting Started
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+To get started with the API, ensure you have the following:
 
-## Learning Laravel
+- PHP >= 7.4
+- Composer
+- Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Clone the repository and install the dependencies:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/MonzerOmer1234/doorstep-view
+cd doorstep-view
+composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Run migrations to set up the database:
 
-## Laravel Sponsors
+```bash
+php artisan migrate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Start the local server:
 
-### Premium Partners
+```bash
+php artisan serve
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+The API will be available at `http://localhost:8000`.
 
-## Contributing
+## API Endpoints
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Search Apartments
 
-## Code of Conduct
+**GET** `/api/apartments/search`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This endpoint allows you to search for apartments based on various filters.
 
-## Security Vulnerabilities
+#### Example Request
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+You can use Postman or curl to test the endpoint.
 
-## License
+**Request URL:**
+```
+GET http://localhost:8000/api/apartments/search
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Query Parameters:**
+- `title`: (optional) Search apartments with a title containing this string.
+- `price_min`: (optional) Minimum price of the apartment.
+- `price_max`: (optional) Maximum price of the apartment.
+- `rooms`: (optional) Number of rooms in the apartment.
+- `available`: (optional) Boolean value to filter available apartments (`true` or `false`).
+- `area`: (optional) Area of the apartment.
+- `building_age`: (optional) Maximum age of the building.
+
+#### Example with Filters
+
+```http
+GET http://localhost:8000/api/apartments/search?price_min=500&price_max=1500&rooms=2&available=true
+```
+
+## Filters
+
+You can combine multiple filters to narrow down the search results:
+
+- **Title**: Use this to search for apartments with specific keywords.
+- **Price**: Use `price_min` and `price_max` to set a price range.
+- **Rooms**: Filter based on the number of rooms.
+- **Availability**: Use `available` to filter by availability status.
+- **Area**: Filter based on the area size.
+- **Building Age**: Filter apartments based on the maximum allowed age of the building.
+
+## Response Format
+
+The API responds with a JSON object. On a successful request, the response will be an array of apartments or a message if no matches are found.
+
+### Example Successful Response
+
+```json
+[
+    {
+        "id": 1,
+        "title": "Spacious Apartment",
+        "description": "A lovely spacious apartment in the city center.",
+        "price": 1200,
+        "address": "123 Main St, City, Country",
+        "available": true,
+        "rooms": 2,
+        "area": 850,
+        "building_age": 5
+    }
+]
+```
+
+### Example Response for No Matches
+
+```json
+{
+    "message": "No matches found"
+}
+```
+
+## Error Handling
+
+If the request fails due to a server error, the API will respond with an appropriate error message:
+
+### Example Error Response
+
+```json
+{
+    "error": "Internal Server Error"
+}
+```
+
+## Conclusion
+
+This API provides a flexible way to search for available apartments. Feel free to explore the various filters to find the apartment that suits your needs!
+```
+
+Feel free to modify any sections as necessary!
