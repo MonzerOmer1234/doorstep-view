@@ -15,22 +15,17 @@ class Search
         $this->query = Apartment::query();
     }
 
-    public function filter(array $filters): Collection|array // Update the return type
+    public function filter(array $filters): Collection
     {
         // If no filters are provided, return all apartments
         if (empty($filters)) {
-            $results = $this->query->get(); // Execute the query to get all apartments
-            return $results->isEmpty() 
-                ? ['message' => 'No apartments found'] // Return message if no apartments exist
-                : $results; // Return all apartments
+            return $this->query->get(); // Return all apartments directly
         }
 
         // Apply filters and fetch results
         $filteredResults = $this->applyFilters($filters)->get();
 
-        return $filteredResults->isEmpty() 
-            ? ['message' => 'No matches found'] // Return message if no matches found
-            : $filteredResults; // Otherwise return the filtered results
+        return $filteredResults; // Return the filtered results
     }
 
     protected function applyFilters(array $filters): Builder
@@ -60,7 +55,7 @@ class Search
         }
 
         if (!empty($filters['building_age'])) {
-            $this->query->where('building_age', $filters['building_age']);
+            $this->query->where('building_age', '<=', $filters['building_age']);
         }
 
         return $this->query; // Return the query builder

@@ -4,23 +4,23 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    //
-     /**
-     * method that handles the registeration of user
+    /**
+     * Method that handles the registration of a user.
+     *
      * @param Request $request
      * @return Response
      */
     public function register(Request $request)
     {
-        // validation
-
         $fields = $request->validate([
             'name' => ['required', 'max:255'],
             'phone_number' => ['required', 'phone'],
@@ -29,62 +29,48 @@ class AuthController extends Controller
             'user_type' => ['required'],
         ]);
 
-        // create the user
         $user = User::create($fields);
-
-        // login the user
-
         FacadesAuth::login($user);
-
-        // generate Token
-
         $token = $user->createToken($request->name)->plainTextToken;
 
-        //    return the response
-
-        // returning responses work like following
         return response()->json([
             'user' => $user,
             'token' => $token,
         ], 200);
-
-        //  return [
-        //     'user' => $user,
-        //     'token' => $token,
-        //  ];
     }
-        /**
-     * method that handles the login of user
+
+    /**
+     * Method that handles the login of a user.
+     *
      * @param Request $request
      * @return Response
      */
     public function login(Request $request)
     {
-        // validate
         $fields = $request->validate([
             'email' => ['required', 'exists:users'],
             'password' => ['required']
         ]);
-        // check the email and password
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            // convert array to Response
             return response()->json([
-                'message' => 'these are not valid credentials',
-            ], 401,);
+                'message' => 'These are not valid credentials',
+            ], 401);
         }
+
         $token = $user->createToken('apitoken')->plainTextToken;
-        //    return response
-        // convert array to Response
 
         return response()->json([
             'user' => $user,
             'token' => $token,
-        ], 200,);
+        ], 200);
     }
+
     /**
-     * method that handles the logout of user
+     * Method that handles the logout of a user.
+     *
      * @param Request $request
      * @return Response
      */
@@ -93,6 +79,52 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
         return response()->json([
             'message' => 'You are logged out',
-        ], 200,);
+        ], 200);
+    }
+
+    /**
+     * Method to initiate the password reset process.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function forgotPassword(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+            ? response()->json(['message' => __('Password reset link sent!')], 200)
+            : response()->json(['message' => __('Failed to send reset link.')], 500);
+    }
+
+    /**
+     * Method to reset the user's password.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+            'token' => 'required',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? response()->json(['message' => __('Password reset successful!')], 200)
+            : response()->json(['message' => __('Failed to reset password.')], 500);
     }
 }

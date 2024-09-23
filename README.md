@@ -6,6 +6,12 @@ This API allows users to search for available apartments based on various filter
 
 - [Getting Started](#getting-started)
 - [API Endpoints](#api-endpoints)
+  - [User Authentication](#user-authentication)
+    - [Register User](#register-user)
+    - [Login User](#login-user)
+    - [Logout User](#logout-user)
+    - [Forgot Password](#forgot-password)
+    - [Reset Password](#reset-password)
   - [Search Apartments](#search-apartments)
 - [Filters](#filters)
 - [Response Format](#response-format)
@@ -42,6 +48,77 @@ php artisan serve
 The API will be available at `http://localhost:8000`.
 
 ## API Endpoints
+
+### User Authentication
+
+#### Register User
+
+**POST** `/api/auth/register`
+
+This endpoint allows users to register a new account.
+
+**Request Body:**
+```json
+{
+    "name": "John Doe",
+    "phone_number": "1234567890",
+    "email": "johndoe@example.com",
+    "password": "password123",
+    "password_confirmation": "password123",
+    "user_type": "tenant"
+}
+```
+
+#### Login User
+
+**POST** `/api/auth/login`
+
+This endpoint allows users to log in.
+
+**Request Body:**
+```json
+{
+    "email": "johndoe@example.com",
+    "password": "password123"
+}
+```
+
+#### Logout User
+
+**POST** `/api/auth/logout`
+
+This endpoint allows users to log out.
+
+**Authorization:** Bearer token required in headers.
+
+#### Forgot Password
+
+**POST** `/api/auth/forgot-password`
+
+This endpoint allows users to request a password reset link.
+
+**Request Body:**
+```json
+{
+    "email": "johndoe@example.com"
+}
+```
+
+#### Reset Password
+
+**POST** `/api/auth/reset-password`
+
+This endpoint allows users to reset their password.
+
+**Request Body:**
+```json
+{
+    "email": "johndoe@example.com",
+    "password": "newpassword123",
+    "password_confirmation": "newpassword123",
+    "token": "reset_token_from_email"
+}
+```
 
 ### Search Apartments
 
@@ -128,7 +205,7 @@ If the request fails due to a server error, the API will respond with an appropr
 
 ## Conclusion
 
-This API provides a flexible way to search for available apartments. Feel free to explore the various filters to find the apartment that suits your needs!
+This API provides a flexible way to search for available apartments and manage user authentication. Feel free to explore the various filters to find the apartment that suits your needs!
 ```
 
-Feel free to modify any sections as necessary!
+Feel free to adjust any parts as needed!
