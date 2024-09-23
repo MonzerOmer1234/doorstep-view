@@ -10,16 +10,43 @@ class Apartment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title' ,
-        'description' ,
-        'price',
-        'address' ,
-        'user_id',
+        'user_id', 'title', 'description', 'price', 'address', 'available', 'rooms', 'area', 'building_age'
     ];
-    public function user(){
+
+    // Relationships
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function amenities(){
+
+    public function amenities()
+    {
         return $this->belongsToMany(Amenity::class);
+    }
+
+    // Custom query scopes
+    public function scopeAvailable($query)
+    {
+        return $query->where('available', true);
+    }
+
+    public function scopeByPrice($query, $min, $max)
+    {
+        return $query->whereBetween('price', [$min, $max]);
+    }
+
+    public function scopeByRooms($query, $rooms)
+    {
+        return $query->where('rooms', $rooms);
+    }
+
+    public function scopeByArea($query, $area)
+    {
+        return $query->where('area', $area);
+    }
+
+    public function scopeByBuildingAge($query, $age)
+    {
+        return $query->where('building_age', '<=', $age);
     }
 }

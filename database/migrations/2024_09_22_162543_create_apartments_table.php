@@ -13,16 +13,26 @@ return new class extends Migration
     {
         Schema::create('apartments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('description');
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
             $table->string('address');
-            $table->double('price');
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('neighborhood_id')->references('id')->on('neighborhoods');
+            $table->boolean('available')->default(true);
+            $table->integer('rooms'); // Number of rooms
+            $table->decimal('area');   // Area of the apartment
+            $table->integer('building_age'); // Age of the building
             $table->timestamps();
+
+            // Add indexes for frequently queried columns
+            $table->index('title');
+            $table->index('price');
+            $table->index('available');
+            $table->index('rooms');
+            $table->index('area');
+            $table->index('building_age');
         });
     }
-
     /**
      * Reverse the migrations.
      */

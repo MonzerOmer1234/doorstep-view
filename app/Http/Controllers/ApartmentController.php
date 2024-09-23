@@ -7,92 +7,46 @@ use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Response
-     */
     public function index()
     {
-        //
-        $apartments = Apartment::all();
-        return response()->json([
-            'status' => 'success',
-            'message' =>'All apartments are fetched successfully',
-            'apartments' => $apartments
-        ] , 200);
+        return Apartment::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
-     */
     public function store(Request $request)
     {
-        //
-        $fields = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'price' =>'required',
-            'address'=> 'required',
-            'user_id' => 'required',
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            // Add other validation rules as needed
         ]);
-        $apartment = Apartment::create($fields);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'The apartment is added successfully',
-            'apartment' => $apartment
-        ] , 200);
+        return Apartment::create($request->all());
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return Apartment::findOrFail($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param string $id
-     * @return Response
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
         $apartment = Apartment::findOrFail($id);
-        $fields = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'price' =>'required',
-            'address'=> 'required',
-            'user_id' => 'required',
-        ]);
-        $apartment->update($fields);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'The apartment is updated successfully',
-            'apartment' => $apartment
-        ] , 200);
+        $apartment->update($request->all());
+        return $apartment;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param string $id
-     * @return Response
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
-        $apartment = Apartment::findOrFail($id);
-        $apartment->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'The apartment is deleted successfully',
+        Apartment::destroy($id);
+        return response()->noContent();
+    }
 
-        ] , 200);
+    // Method to feature apartments
+    public function feature(Apartment $apartment)
+    {
+        $apartment->update(['featured' => true]);
+
+        return redirect()->route('apartments.index')->with('success', 'Apartment featured successfully.');
     }
 }
