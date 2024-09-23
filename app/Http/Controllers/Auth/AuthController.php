@@ -70,7 +70,7 @@ class AuthController extends Controller
 
     /**
      * Method that handles the logout of a user.
-     *
+     * 
      * @param Request $request
      * @return Response
      */
