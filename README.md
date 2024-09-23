@@ -1,4 +1,3 @@
-```markdown
 # Apartment Search API
 
 This API allows users to search for available apartments based on various filters. It is built using Laravel and provides endpoints to retrieve apartment listings.
