@@ -6,6 +6,7 @@ use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\NeighborhoodController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\RecommendationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,3 +36,6 @@ Route::apiResource('/neighborhoods' , NeighborhoodController::class)->middleware
 
 Route::apiResource('/users' , UserProfileController::class)->middleware('auth');
 
+// Recommendation System
+Route::get('/recommendations/{apartmentId}', [RecommendationController::class, 'fetchRecommendations']);
+Route::post('/recommendations/{apartmentId}/update', [RecommendationController::class, 'updateRecommendations']);
