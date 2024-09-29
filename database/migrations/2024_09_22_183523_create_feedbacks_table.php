@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             // 'user_id',
             // 'apartment_id',
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('apartment_id')->references('id')->on('apartments');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->index();
+            $table->foreignId('apartment_id')->constrained()->onDelete('cascade')->index();
             $table->string('rating');
             $table->string('comment') ;
             // 'rating' ,

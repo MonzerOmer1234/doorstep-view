@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('apartments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('neighborhood_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10 , 2);
             $table->string('address');
             $table->boolean('available')->default(true);
             $table->integer('rooms'); // Number of rooms

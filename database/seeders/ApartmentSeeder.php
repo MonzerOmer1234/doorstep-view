@@ -26,6 +26,7 @@ class ApartmentSeeder extends Seeder
                 'rooms' => $faker->numberBetween(1, 5),
                 'area' => $faker->numberBetween(30, 150), // in square meters
                 'building_age' => $faker->numberBetween(0, 50), // Age of the building
+                'neighborhood_id' => 1
             ]);
         }
     }

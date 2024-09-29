@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Apartment;
 use App\Models\Neighborhood;
 use Illuminate\Http\Request;
 
@@ -88,5 +89,16 @@ class NeighborhoodController extends Controller
             'message' => 'The neighborhood is deleted successfully',
 
         ] , 200);
+    }
+
+    public function getApartments(string $id){
+        $apartments = Apartment::where('neighborhood_id' , $id)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The apartments are fetched successfully',
+            'apartments' => $apartments
+        ]);
+
     }
 }

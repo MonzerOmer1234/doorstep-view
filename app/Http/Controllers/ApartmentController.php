@@ -49,4 +49,25 @@ class ApartmentController extends Controller
 
         return redirect()->route('apartments.index')->with('success', 'Apartment featured successfully.');
     }
+
+    public function attachAmenity(string $apartmentId , string $amenityId){
+        $apartment = Apartment::findOrFail($apartmentId);
+        $apartment->addAmenity($amenityId);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The amenity is attached successfully',
+
+        ] , 200);
+
+    }
+    public function detachAmenity(string $apartmentId , string $amenityId){
+        $apartment = Apartment::findOrFail($apartmentId);
+        $apartment->detachAmenity($amenityId);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The amenity is detached successfully',
+
+        ] , 200);
+
+    }
 }
