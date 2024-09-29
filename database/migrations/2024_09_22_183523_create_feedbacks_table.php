@@ -11,14 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedbacks', function (Blueprint $table) {
-            $table->id();
+        Schema::create('feedback', function (Blueprint $table) {
+
             // 'user_id',
             // 'apartment_id',
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->index();
-            $table->foreignId('apartment_id')->constrained()->onDelete('cascade')->index();
+            $table->id(); // Primary key
+            $table->foreignId('user_id')
+                ->constrained('users') // Specify users table
+                ->onDelete('cascade')
+                ->index()
+                ->name('fk_feedback_user'); // Explicit foreign key name
+                $table->foreignId('apartment_id')
+                ->constrained('apartments') // Specify apartments table
+                ->onDelete('cascade')
+                ->index()
+                ->name('fk_feedback_apartment'); // Explicit foreign key name
             $table->string('rating');
-            $table->string('comment') ;
+            $table->string('comment');
             // 'rating' ,
             // 'comment',
             $table->timestamps();

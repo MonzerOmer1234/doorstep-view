@@ -6,6 +6,10 @@ use App\Models\Apartment;
 use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
+/**
+ * specifies all apartments
+ * @return Response
+ */
 {
     public function index()
     {
@@ -50,6 +54,13 @@ class ApartmentController extends Controller
         return redirect()->route('apartments.index')->with('success', 'Apartment featured successfully.');
     }
 
+
+    /**
+     * specifies the attachment of amenity to apartment
+     * @param string $apartmentId
+     * @param $amenityId
+     * @return Response
+     */
     public function attachAmenity(string $apartmentId , string $amenityId){
         $apartment = Apartment::findOrFail($apartmentId);
         $apartment->addAmenity($amenityId);
@@ -60,6 +71,13 @@ class ApartmentController extends Controller
         ] , 200);
 
     }
+
+    /**
+     * specifies the detachment of amenity from apartment
+     * @param string $apartmentId
+     * @param $amenityId
+     * @return Response
+     */
     public function detachAmenity(string $apartmentId , string $amenityId){
         $apartment = Apartment::findOrFail($apartmentId);
         $apartment->detachAmenity($amenityId);

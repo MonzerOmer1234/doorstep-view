@@ -90,7 +90,11 @@ class NeighborhoodController extends Controller
 
         ] , 200);
     }
-
+     /**
+     * get apartments available in neighbourhood.
+     * @param string $id
+     * @return Response
+     */
     public function getApartments(string $id){
         $apartments = Apartment::where('neighborhood_id' , $id)->get();
 

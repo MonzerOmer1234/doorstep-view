@@ -8,7 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class FeedbackController extends Controller
 {
-    // Method to submit feedback
+    /**
+     * submitting feedback
+     * @param Request $request
+     * @return Response
+     */
     public function submitFeedback(Request $request)
     {
         // Validate the incoming request
@@ -35,9 +39,15 @@ class FeedbackController extends Controller
             [
                 'status' => 'success',
                 'message' => 'Feedback submitted successfully!',
-                'feedback' => $feedback], 201);
+                'feedback' => $feedback
+            ], 201);
     }
-     // Method to retrieve feedback for an apartment
+
+     /**
+     * Method to retrieve feedback for an apartment
+     * @param string $apartmentId
+     * @return Response
+     */
      public function getFeedbackForApartment($apartmentId)
      {
          // Retrieve feedback for the specified apartment

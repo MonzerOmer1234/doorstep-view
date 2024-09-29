@@ -51,4 +51,4 @@ Route::post('/recommendations/{apartmentId}/update', [RecommendationController::
 // feedbacks
 
 Route::post('/feedback', [FeedbackController::class, 'submitFeedback']);
-Route::get('/apartments/{apartmentId}/feedbacks', [FeedbackController::class, 'getFeedbackForApartment']);
+Route::get('/apartments/{apartmentId}/feedback', [FeedbackController::class, 'getFeedbackForApartment']);
