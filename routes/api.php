@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\AmenityController;
+use App\Http\Controllers\Auth\AgentRegistrationController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\NeighborhoodController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RecommendationController;
@@ -52,3 +56,17 @@ Route::post('/recommendations/{apartmentId}/update', [RecommendationController::
 
 Route::post('/feedback', [FeedbackController::class, 'submitFeedback']);
 Route::get('/apartments/{apartmentId}/feedback', [FeedbackController::class, 'getFeedbackForApartment']);
+
+// Agents
+Route::apiResource('/agents', AgentController::class);
+
+// Agent Registration
+Route::post('/agents/register', [AgentRegistrationController::class, 'register']);
+
+//properties
+Route::apiResource('/properties', PropertyController::class);
+
+// Favorites
+Route::post('favorites', [FavoriteController::class, 'add']); // Add favorite
+Route::delete('favorites/{id}', [FavoriteController::class, 'remove']); // Remove favorite
+Route::get('favorites', [FavoriteController::class, 'list']); // List favorites
