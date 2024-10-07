@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ApartmentController;
@@ -70,3 +71,43 @@ Route::apiResource('/properties', PropertyController::class);
 Route::post('favorites', [FavoriteController::class, 'add']); // Add favorite
 Route::delete('favorites/{id}', [FavoriteController::class, 'remove']); // Remove favorite
 Route::get('favorites', [FavoriteController::class, 'list']); // List favorites
+
+// admin
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    // User Management
+    Route::apiResource('users', UserController::class);
+});
+// dashboard
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RequestController;
+use Symfony\Component\Routing\RequestContext;
+
+Route::group(['prefix' => 'dashboard'], function () {
+    Route::get('properties', [DashboardController::class, 'getProperties']);
+    Route::get('statistics', [DashboardController::class, 'getStatistics']);
+    Route::get('inquiries', [DashboardController::class, 'getInquiries']);
+    Route::get('reports', [DashboardController::class, 'getReports']);
+    Route::post('add-property', [DashboardController::class, 'addProperty']);
+    Route::put('update-property/{id}', [DashboardController::class, 'updateProperty']);
+    Route::delete('delete-property/{id}', [DashboardController::class, 'deleteProperty']);
+});
+// dashboard Protected Routes
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    // All the routes that require authentication
+    Route::get('dashboard/properties', [DashboardController::class, 'getProperties']);
+    // ... other protected routes
+});
+// nearby amenities
+Route::get('properties/{id}/amenities', [AmenityController::class, 'getNearbyAmenities']);
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('requests', [RequestController::class, 'index']); // Get all requests
+    Route::post('requests', [RequestController::class, 'store']); // Create a new request
+    Route::get('requests/{id}', [RequestController::class, 'show']); // Get a single request
+    Route::put('requests/{id}', [RequestController::class, 'update']); // Update a request
+    Route::delete('requests/{id}', [RequestController::class, 'destroy']); // Delete a request
+});
+

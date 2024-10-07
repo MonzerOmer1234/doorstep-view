@@ -39,6 +39,7 @@ return [
         'throttle:api',
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ],
+    'admin' => \App\Http\Middleware\AdminMiddleware::class,
     /*
     |--------------------------------------------------------------------------
     | Expiration Minutes

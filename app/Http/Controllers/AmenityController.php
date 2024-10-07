@@ -88,4 +88,32 @@ class AmenityController extends Controller
             'message' => 'The amenity is deleted successfully'
         ] , 200);
     }
+
+
+
+    // Method to get nearby amenities for a specific property
+    public function getNearbyAmenities($propertyId, Request $request)
+    {
+        // Find the property by ID
+        $property = Property::findOrFail($propertyId);
+
+        // Set the distance threshold (in kilometers or miles)
+        $distance = $request->input('distance', 5); // Default to 5 km
+
+        // Query to find nearby amenities within the distance range
+        $amenities = Amenity::selectRaw("
+            id, name, address, category, latitude, longitude,
+            (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance
+        ", [$property->latitude, $property->longitude, $property->latitude])
+            ->having('distance', '<=', $distance)
+            ->orderBy('distance', 'asc')
+            ->get();
+
+        return response()->json([
+            'property' => $property,
+            'amenities' => $amenities
+        ]);
+    }
+}
+
 }

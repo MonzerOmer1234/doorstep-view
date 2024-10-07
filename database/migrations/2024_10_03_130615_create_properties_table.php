@@ -20,6 +20,7 @@ class CreatePropertiesTable extends Migration
             $table->integer('area')->nullable(); // Area in square feet
             $table->string('property_type'); // e.g., apartment, villa
             $table->string('status')->default('available'); // e.g., available, sold
+            $table->integer('views')->default(0);
             $table->timestamps(); // Created at and updated at timestamps
         });
     }

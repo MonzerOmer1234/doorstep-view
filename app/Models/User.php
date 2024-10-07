@@ -61,6 +61,12 @@ public function favorites()
 {
     return $this->hasMany(Favorite::class);
 }
-
+ public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 }
+
+
+
 
