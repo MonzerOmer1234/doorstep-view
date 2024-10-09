@@ -5,6 +5,7 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ApartmentController;
 use App\Http\Controllers\AmenityController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Auth\AgentRegistrationController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedbackController;
@@ -79,7 +80,10 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 });
 // dashboard
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\VisitRequestController;
 use Symfony\Component\Routing\RequestContext;
 
 Route::group(['prefix' => 'dashboard'], function () {
@@ -110,4 +114,37 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('requests/{id}', [RequestController::class, 'update']); // Update a request
     Route::delete('requests/{id}', [RequestController::class, 'destroy']); // Delete a request
 });
+
+
+// image upload
+Route::post('/upload-image', [ImageController::class, 'store']); // For image upload
+
+// messages
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/messages/send', [MessageController::class, 'sendMessage']);
+    Route::get('/messages/{receiverId}', [MessageController::class, 'getMessages']);
+    Route::patch('/messages/{id}/read', [MessageController::class, 'markAsRead']);
+});
+
+
+
+
+Route::get('/analytics/total-properties', [ AnalyticsController::class, 'totalProperties']);
+Route::get('/analytics/property-views', [AnalyticsController::class, 'propertyViews']);
+Route::get('/analytics/inquiries', [AnalyticsController::class, 'inquiries']);
+Route::get('/analytics/popular-property-types', [AnalyticsController::class, 'popularPropertyTypes']);
+Route::get('/analytics/views-over-time', [AnalyticsController::class, 'viewsOverTime']);
+
+
+
+// Define routes for visit requests
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/visit-requests', [VisitRequestController::class, 'create']);
+    Route::get('/visit-requests', [VisitRequestController::class, 'index']);
+    Route::patch('/visit-requests/{id}', [VisitRequestController::class, 'update']);
+});
+
+
 

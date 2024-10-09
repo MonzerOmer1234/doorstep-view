@@ -21,6 +21,7 @@ class Property extends Model
         'area',
         'property_type',
         'status',
+        'view_count',
     ];
 
     // Define relationship with the Agent model

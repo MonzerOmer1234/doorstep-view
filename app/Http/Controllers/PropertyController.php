@@ -60,15 +60,20 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function show(string $id)
-    {
-        $property = Property::findOrFail($id);
+     public function show(string $id)
+     {
+         // Retrieve the property
+         $property = Property::findOrFail($id);
+
+         // Increment the view count
+         $property->increment('view_count');
+
+        // Return a JSON response with the property data
         return response()->json([
-            'status' => 'success',
-            'message' => 'Property retrieved successfully',
-            'property' => $property
-        ], 200);
-    }
+            'success' => true,
+            'data' => $property,
+        ] , 200);
+     }
     /**
      * updates a specific property in the database
      * @param Request $request

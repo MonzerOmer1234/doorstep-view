@@ -65,6 +65,22 @@ public function favorites()
     {
         return $this->is_admin;
     }
+     // User has many messages (as the sender)
+     public function messages()
+     {
+         return $this->hasMany(Message::class);
+     }
+
+     // User can participate in many threads
+     public function threads()
+     {
+         return $this->belongsToMany(Thread::class, 'messages');
+     }
+     public function orders()
+    {
+    return $this->hasMany(Order::class);
+    }
+
 }
 
 
