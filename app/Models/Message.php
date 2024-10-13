@@ -15,6 +15,11 @@ class Message extends Model
         'is_read',
     ];
 
+    public function media()
+    {
+        return $this->hasMany(Media::class);
+    }
+
     // Define relationships if necessary
     public function sender()
     {
