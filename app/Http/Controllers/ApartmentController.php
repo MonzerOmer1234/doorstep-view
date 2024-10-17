@@ -88,4 +88,37 @@ class ApartmentController extends Controller
         ] , 200);
 
     }
+    public function getNearbyApartments($userLat, $userLng, $radius = 5)
+    {
+        $apartments = \Illuminate\Support\Facades\DB::table('apartments')
+            ->select('*', \Illuminate\Support\Facades\DB::raw("
+                ( 6371 * acos( cos( radians($userLat) )
+                * cos( radians( latitude ) )
+                * cos( radians( longitude ) - radians($userLng) )
+            + sin( radians($userLat) )
+            * sin( radians( latitude ) ) ) )
+            AS distance"))
+        ->having('distance', '<=', $radius)
+        ->orderBy('distance')
+        ->limit(6) // Return six apartments
+        ->get();
+
+    return $apartments;
+}
+    public function nearbyApartments(Request $request)
+{
+    $userLat = $request->input('latitude');
+    $userLng = $request->input('longitude');
+
+    if (!$userLat || !$userLng) {
+        return response()->json(['error' => 'User location is required'], 400);
+    }
+
+    // Get apartments within a 5 km range
+    $apartments = $this->getNearbyApartments($userLat, $userLng);
+
+    return response()->json($apartments);
+}
+
+
 }

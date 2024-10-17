@@ -79,4 +79,5 @@ class Apartment extends Model
 
         return $this;
     }
+  
 }

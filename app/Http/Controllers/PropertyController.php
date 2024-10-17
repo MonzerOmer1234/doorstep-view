@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use App\Models\User;
+use App\Notifications\PropertyAddedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,9 +50,14 @@ class PropertyController extends Controller
         }
 
         $property = Property::create($request->all());
+        $users = User::all();
+        foreach ($users as $user) {
+            $user->notify(new PropertyAddedNotification($property));
+        }
+
         return response()->json([
             'status' => 'success',
-            'message' => 'Property created successfully',
+            'message' => 'Property created successfully and users are notified',
             'property' => $property
         ], 201);
     }

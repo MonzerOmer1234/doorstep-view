@@ -57,7 +57,9 @@ Route::post('/recommendations/{apartmentId}/update', [RecommendationController::
 // feedbacks
 
 Route::post('/feedback', [FeedbackController::class, 'submitFeedback']);
+// apartments
 Route::get('/apartments/{apartmentId}/feedback', [FeedbackController::class, 'getFeedbackForApartment']);
+Route::get('/nearby-apartments', [ApartmentController::class, 'nearbyApartments']);
 
 // Agents
 Route::apiResource('/agents', AgentController::class);
