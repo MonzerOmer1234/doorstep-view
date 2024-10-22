@@ -82,6 +82,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 });
 // dashboard
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FcmController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RequestController;
@@ -147,6 +148,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/visit-requests', [VisitRequestController::class, 'index']);
     Route::patch('/visit-requests/{id}', [VisitRequestController::class, 'update']);
 });
+
+// firebase controller
+Route::put('update-device-token', [FcmController::class, 'updateDeviceToken']);
+Route::post('send-fcm-notification', [FcmController::class, 'sendFcmNotification']);
 
 
 
