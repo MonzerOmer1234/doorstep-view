@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 
 use App\Models\Agent;
+use App\Models\User;
 use Google\Service\ArtifactRegistry\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -35,12 +36,12 @@ class AgentRegistrationController extends Controller
         }
 
         // Create the agent
-        $agent = Agent::create($request->all());
+        $user = User::create($request->all());
 
         return response()->json([
             'status' => 'success',
             'message' => 'Agent created successfully',
-            'agent' => $agent
+            'user' => $user
         ], 201);
     }
      /**
@@ -56,18 +57,18 @@ class AgentRegistrationController extends Controller
             'password' => ['required']
         ]);
 
-        $agent = Agent::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
-        if (!$agent || !Hash::check($request->password, $agent->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'These are not valid credentials',
             ], 401);
         }
 
-        $token = $agent->createToken('apitoken')->plainTextToken;
+        $token = $user->createToken('apitoken')->plainTextToken;
 
         return response()->json([
-            'agent' => $agent,
+            'agent' => $user,
             'token' => $token,
         ], 200);
     }

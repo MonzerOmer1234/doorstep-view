@@ -130,4 +130,83 @@ class PropertyController extends Controller
             'message' => 'Property deleted successfully',
         ], 200);
     }
+     // Method to feature properties
+     public function feature(Property $property)
+     {
+         $property->update(['featured' => true]);
+
+         return response()->json([
+            'message' => 'property is featured successfully'
+         ] , 200);
+     }
+      /**
+     * specifies the attachment of amenity to property
+     * @param string $propertyId
+     * @param $amenityId
+     * @return Response
+     */
+    public function attachAmenity(string $propertyId , string $amenityId){
+        $property = Property::findOrFail($propertyId);
+        $property->addAmenity($amenityId);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The amenity is attached successfully',
+
+        ] , 200);
+
+    }
+        /**
+     * specifies the detachment of amenity from property
+     * @param string $propertyId
+     * @param $amenityId
+     * @return Response
+     */
+    public function detachAmenity(string $propertyId , string $amenityId){
+        $property = Property::findOrFail($propertyId);
+        $property->detachAmenity($amenityId);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The amenity is detached successfully',
+
+        ] , 200);
+
+    }
+    public function getNearByProperties($userLat, $userLng, $radius = 5)
+    {
+        $properties = \Illuminate\Support\Facades\DB::table('properties')
+            ->select('*', \Illuminate\Support\Facades\DB::raw("
+                ( 6371 * acos( cos( radians($userLat) )
+                * cos( radians( latitude ) )
+                * cos( radians( longitude ) - radians($userLng) )
+            + sin( radians($userLat) )
+            * sin( radians( latitude ) ) ) )
+            AS distance"))
+        ->having('distance', '<=', $radius)
+        ->orderBy('distance')
+        ->limit(6) // Return six apartments
+        ->get();
+
+    return response()->json([
+        'properties' => $properties
+    ] , 200);
+}
+public function nearByProperties(Request $request)
+{
+    $userLat = $request->input('latitude');
+    $userLng = $request->input('longitude');
+
+    if (!$userLat || !$userLng) {
+        return response()->json(['error' => 'User location is required'], 400);
+    }
+
+    // Get apartments within a 5 km range
+    $properties = $this->getNearByProperties($userLat, $userLng);
+
+    return response()->json([
+        'properties' => $properties
+    ] , 200);
+}
+
+
+
 }
