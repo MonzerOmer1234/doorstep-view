@@ -10,7 +10,7 @@ class CreatePropertiesTable extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id(); // Auto-incrementing ID
-            $table->foreignId('agent_id')->constrained()->onDelete('cascade'); // Foreign key referencing agents
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key referencing agents
             $table->string('title'); // Title of the property
             $table->text('description'); // Description of the property
             $table->decimal('price', 10, 2); // Price of the property
@@ -21,6 +21,7 @@ class CreatePropertiesTable extends Migration
             $table->string('property_type'); // e.g., apartment, villa
             $table->string('status')->default('available'); // e.g., available, sold
             $table->integer('views')->default(0);
+            $table->string('neighborhood');
             $table->timestamps(); // Created at and updated at timestamps
         });
     }
