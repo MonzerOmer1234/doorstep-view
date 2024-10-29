@@ -48,8 +48,8 @@ class User extends Authenticatable
         ];
     }
 
- public function apartments(){
-    return $this->hasMany(Apartment::class);
+ public function properties(){
+    return $this->hasMany(Property::class);
  }
 
  public function feedbacks(){
@@ -61,25 +61,14 @@ public function favorites()
 {
     return $this->hasMany(Favorite::class);
 }
- public function isAdmin()
-    {
-        return $this->is_admin;
-    }
+
      // User has many messages (as the sender)
      public function messages()
      {
          return $this->hasMany(Message::class);
      }
 
-     // User can participate in many threads
-     public function threads()
-     {
-         return $this->belongsToMany(Thread::class, 'messages');
-     }
-     public function orders()
-    {
-    return $this->hasMany(Order::class);
-    }
+   
 
 }
 

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
@@ -19,6 +20,31 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/auth/register',
+        description: 'registering a user',
+        tags: ['register']
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'User is registered successfully',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'token', type: 'string', example: 'adcxzvbhfredfgh'),
+
+                new OA\Property(
+                    property: 'user',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                        new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                        new OA\Property(property: 'email', type: 'string', example: 'john.doe@example.com')
+                    ]
+                )
+            ]
+        )
+    )]
     public function register(Request $request)
     {
         $fields = $request->validate([
@@ -36,7 +62,7 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user,
             'token' => $token,
-        ], 200);
+        ], 201);
     }
 
     /**
@@ -45,6 +71,32 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/auth/login',
+        description: 'log a user',
+        tags: ['login']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'User is logged in successfully',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'token', type: 'string', example: 'adcxzvbhfredfgh'),
+
+                new OA\Property(
+                    property: 'user',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer', example: 1),
+                        new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                        new OA\Property(property: 'email', type: 'string', example: 'john.doe@example.com')
+                    ]
+                )
+            ]
+        )
+    )]
+
     public function login(Request $request)
     {
         $fields = $request->validate([
@@ -70,10 +122,27 @@ class AuthController extends Controller
 
     /**
      * Method that handles the logout of a user.
-     * 
+     *
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/auth/logout',
+        description: 'user is logging out',
+        tags: ['logout']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'User is logged out successfully',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string', example: 'you are logged out successfully'),
+
+
+            ]
+        )
+    )]
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
@@ -88,6 +157,23 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/auth/password/forgot',
+        description: 'forgetting password',
+        tags: ['Forgot Password']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Forgotting password',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string', example: 'Paasword reset link sent! | failed to send reset link'),
+
+
+            ]
+        )
+    )]
     public function forgotPassword(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -105,6 +191,23 @@ class AuthController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/auth/passsword/reset',
+        description: 'reset password',
+        tags: ['Resetting Password']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Resetting password',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string', example: 'Password reset successful! | Failed to reset password.'),
+
+
+            ]
+        )
+    )]
     public function resetPassword(Request $request)
     {
         $request->validate([

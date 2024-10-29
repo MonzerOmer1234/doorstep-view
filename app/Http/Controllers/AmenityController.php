@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Amenity;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class AmenityController extends Controller
 {
@@ -12,6 +13,32 @@ class AmenityController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
+    #[OA\Get(
+        path: '/api/amenities',
+        description: 'getting all amenities',
+        tags: ['All Amenities']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Fetching all amenities',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'amenities are fetched successfully!'),
+
+                new OA\Property(
+                    property: 'amenities',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'name', type: 'integer', example:  'wifi'),
+                        new OA\Property(property: 'icon', type: 'string', example: 'icon'),
+                        new OA\Property(property: 'category', type: 'string', example: 'category 1')
+                    ]
+                )
+            ]
+        )
+    )]
     public function index()
     {
         //
@@ -28,6 +55,32 @@ class AmenityController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/amenities',
+        description: 'craete an amenity',
+        tags: ['Create an amenity']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'create an amenity',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'the amenity is created successfully!'),
+
+                new OA\Property(
+                    property: 'agents',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'icon', type: 'integer', example: "icon"),
+                        new OA\Property(property: 'name', type: 'string', example: 'wifi'),
+                        new OA\Property(property: 'category', type: 'string', example: 'cateory 2')
+                    ]
+                )
+            ]
+        )
+    )]
     public function store(Request $request)
     {
         //
@@ -43,13 +96,7 @@ class AmenityController extends Controller
         ] , 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -57,6 +104,33 @@ class AmenityController extends Controller
      * @param string $id
      * @return Response
      */
+    #[OA\Put(
+        path: '/api/agents/{agent}',
+        description: 'Update an agent',
+        tags: ['Update agent']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Updating an agent',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'The amenity is updated successfully!'),
+
+                new OA\Property(
+                    property: 'amenity',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'icon', type: 'integer', example: 'icon'),
+                        new OA\Property(property: 'name', type: 'string', example: 'wifi'),
+                        new OA\Property(property: 'category', type: 'string', example: 'cat 2')
+                    ]
+                )
+            ]
+        )
+    )]
+
     public function update(Request $request, string $id)
     {
         //
@@ -79,6 +153,24 @@ class AmenityController extends Controller
      * @param string $id
      * @return Response
      */
+    #[OA\Delete(
+        path: '/api/agents/{id}',
+        description: 'Deleting an agent',
+        tags: ['Delete an agent']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Deleting an agent',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'amenity is deleted successfully!'),
+
+
+            ]
+        )
+    )]
     public function destroy(string $id)
     {
         //
@@ -93,6 +185,40 @@ class AmenityController extends Controller
 
 
     // Method to get nearby amenities for a specific property
+    #[OA\Get(
+        path: '/api/properties/{id}/amenities',
+        description: 'get nearby amenities',
+        tags: ['Nearby amenities']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'get nearby amenities',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+
+
+                new OA\Property(
+                    property: 'property',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'title', type: 'integer', example: "villa"),
+                        new OA\Property(property: 'description', type: 'string', example: 'beside somewhere'),
+                        new OA\Property(property: 'price', type: 'string', example: '$1000')
+                    ]
+                    ),
+                new OA\Property(
+                    property: 'amenities',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'icon', type: 'integer', example: "icon"),
+                        new OA\Property(property: 'name', type: 'string', example: 'wifi'),
+                        new OA\Property(property: 'category', type: 'string', example: 'cat 2')
+                    ]
+                )
+            ]
+        )
+    )]
     public function getNearbyAmenities($propertyId, Request $request)
     {
         // Find the property by ID

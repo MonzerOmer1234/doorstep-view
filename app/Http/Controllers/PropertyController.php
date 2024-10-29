@@ -7,14 +7,44 @@ use App\Models\User;
 use App\Notifications\PropertyAddedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use openapi\Attributes as OA;
 
 class PropertyController extends Controller
-/**
- * specifies all the properties in the database
- * @return \Illuminate\Http\JsonResponse
 
- */
 {
+    /**
+     * specifies all the properties in the database
+     * @return \Illuminate\Http\JsonResponse
+
+     */
+    #[OA\Get(
+        path: '/api/properties',
+        description: 'Get all properties',
+        tags: ['All properties']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Get all properties',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'properties are fetched successfully!'),
+
+                new OA\Property(
+                    property: 'properties',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                        new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                        new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                        new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+
+                    ]
+                )
+            ]
+        )
+    )]
     public function index()
     {
         $properties = Property::all();
@@ -29,6 +59,34 @@ class PropertyController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    #[OA\Post(
+        path: '/api/properties',
+        description: 'Store a property',
+        tags: ['Store a property']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Create a property',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'property is created successfully!'),
+
+                new OA\Property(
+                    property: 'property',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                        new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                        new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                        new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+
+                    ]
+                )
+            ]
+        )
+    )]
 
     public function store(Request $request)
     {
@@ -67,6 +125,34 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
+     #[OA\Get(
+        path: '/api/properties/{id}',
+        description: 'Get the details of a property',
+        tags: ['The details of a property']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'The details of a property',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'success', type: 'boolean', example: true),
+                new OA\Property(property: 'message', type: 'string', example: 'property is fethced successfully!'),
+
+                new OA\Property(
+                    property: 'data',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                        new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                        new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                        new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+
+                    ]
+                )
+            ]
+        )
+    )]
      public function show(string $id)
      {
          // Retrieve the property
@@ -87,6 +173,34 @@ class PropertyController extends Controller
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
+    #[OA\Patch(
+        path: '/api/properties/{id}',
+        description: 'Update a property',
+        tags: ['Update a property']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Update a property',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'property is updated successfully!'),
+
+                new OA\Property(
+                    property: 'property',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                        new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                        new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                        new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+
+                    ]
+                )
+            ]
+        )
+    )]
 
     public function update(Request $request, string$id)
     {
@@ -120,6 +234,24 @@ class PropertyController extends Controller
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
+    #[OA\Delete(
+        path: '/api/properties/{id}',
+        description: 'Delete property',
+        tags: ['Deletion of a property']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Deletion of a property',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'property is deleted successfully!'),
+
+
+            ]
+        )
+    )]
 
     public function destroy(string $id)
     {
@@ -127,10 +259,32 @@ class PropertyController extends Controller
         $property->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Property deleted successfully',
+            'message' => 'Property is deleted successfully',
         ], 200);
     }
      // Method to feature properties
+     /**
+      * @param Property $property
+      * @return Response
+      */
+      #[OA\Patch(
+        path: '/api/properties/feature',
+        description: 'Featuring Properties',
+        tags: ['Featuring Properties']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Featuring properties',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+
+                new OA\Property(property: 'message', type: 'string', example: 'property is featured successfully!'),
+
+
+            ]
+        )
+    )]
      public function feature(Property $property)
      {
          $property->update(['featured' => true]);
@@ -145,6 +299,26 @@ class PropertyController extends Controller
      * @param $amenityId
      * @return Response
      */
+    #[OA\Put(
+        path: '/api/properties/attach-amenity/{propertyId}/{amenityId}',
+        description: 'attach amenity',
+        tags: ['Attach amenities']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'attach amenities',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+
+                new OA\Property(property: 'message', type: 'string', example: 'The amenity is attached successfully!'),
+
+
+            ]
+        )
+    )]
+
+
     public function attachAmenity(string $propertyId , string $amenityId){
         $property = Property::findOrFail($propertyId);
         $property->addAmenity($amenityId);
@@ -161,6 +335,25 @@ class PropertyController extends Controller
      * @param $amenityId
      * @return Response
      */
+    #[OA\Delete(
+        path: '/api/properties/detach-amenity/{propertyId}/{amenityId}',
+        description: 'attach amenity',
+        tags: ['Detach amenities']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Detach amenities',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+
+                new OA\Property(property: 'message', type: 'string', example: 'The amenity is detached successfully!'),
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+
+
+            ]
+        )
+    )]
     public function detachAmenity(string $propertyId , string $amenityId){
         $property = Property::findOrFail($propertyId);
         $property->detachAmenity($amenityId);
@@ -171,6 +364,12 @@ class PropertyController extends Controller
         ] , 200);
 
     }
+  /**
+   * @param $userLat
+   * @param $userLng
+   * @param $radius
+   * @return Response
+   */
     public function getNearByProperties($userLat, $userLng, $radius = 5)
     {
         $properties = \Illuminate\Support\Facades\DB::table('properties')
@@ -190,6 +389,39 @@ class PropertyController extends Controller
         'properties' => $properties
     ] , 200);
 }
+
+/**
+ * @param Request $request
+ * @return Response
+ */
+#[OA\Get(
+    path: '/api/nearby-properties',
+    description: 'These are nearby properties',
+    tags: ['Nearby Properties']
+)]
+#[OA\Response(
+    response: 200,
+    description: 'These are nearby properties',
+    content: new OA\JsonContent(
+        type: 'object',
+        properties: [
+
+            new OA\Property(
+                property: 'properties',
+                type: 'object',
+                properties: [
+                    new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                    new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                    new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                    new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+
+                ]
+            )
+
+
+        ]
+    )
+)]
 public function nearByProperties(Request $request)
 {
     $userLat = $request->input('latitude');

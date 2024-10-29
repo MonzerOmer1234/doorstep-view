@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Models\Favorite;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
+
 
 class FavoriteController extends Controller
 {
@@ -14,6 +16,32 @@ class FavoriteController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    #[OA\Post(
+        path: '/api/favorites',
+        description: 'Create a new favorite',
+        tags: ['Create Favourite']
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Create a new favorite',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'property is added to favorites successfully!'),
+
+                new OA\Property(
+                    property: 'favorite',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'user_id', type: 'integer', example:  1),
+                        new OA\Property(property: 'property_id', type: 'integer', example: 3),
+
+                    ]
+                )
+            ]
+        )
+    )]
     public function add(Request $request)
     {
         $request->validate([
@@ -38,6 +66,25 @@ class FavoriteController extends Controller
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
+    #[OA\Delete(
+        path: '/api/favorites/{id}',
+        description: 'Delete a favorite',
+        tags: ['Delete Favourite']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Delete a favorite',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'property is removed from favorites successfully!'),
+
+
+            ]
+        )
+    )]
+
 
     public function remove(Request $request, string $id)
     {
@@ -49,14 +96,40 @@ class FavoriteController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Property removed from favorites',
-        ], 204);
+            'message' => 'Property is removed from favorites',
+        ], 200);
     }
 
     /**
      * A method to list the user's favorite properties
      * @return \Illuminate\Http\JsonResponse
      */
+    #[OA\Get(
+        path: '/api/favorites',
+        description: 'get the list of favorites',
+        tags: ['All Favourites']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'get the list of favorites',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'All favorites are fetched successfully!'),
+
+                new OA\Property(
+                    property: 'favorite',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'user_id', type: 'integer', example:  1),
+                        new OA\Property(property: 'property_id', type: 'integer', example: 3),
+
+                    ]
+                )
+            ]
+        )
+    )]
     public function list()
     {
         $favorites = Favorite::where('user_id', auth()->id())->with('property')->get();
@@ -66,5 +139,5 @@ class FavoriteController extends Controller
             'favorites' => $favorites,
         ], 200);
     }
-    
+
 }

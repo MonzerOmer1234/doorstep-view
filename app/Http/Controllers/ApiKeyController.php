@@ -4,12 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\ApiKey;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class ApiKeyController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    #[OA\Get(
+        path: '/api/api-keys',
+        description: 'getting The api key that is not revoked',
+        tags: ['Api Key']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'getting The api key that is not revoked',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'Api key is fetched successfully!'),
+
+                new OA\Property(
+                    property: 'api_key',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'key', type: 'string', example:  'xazsdscdssertyyu'),
+                        new OA\Property(property: 'type', type: 'string', example: 'type 1'),
+                        new OA\Property(property: 'is_revoked', type: 'boolean', example: 'false')
+                    ]
+                )
+            ]
+        )
+    )]
     public function index()
     {
         //

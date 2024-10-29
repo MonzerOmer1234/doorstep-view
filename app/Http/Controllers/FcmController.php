@@ -5,9 +5,33 @@ use Illuminate\Http\Request;
 use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use openApi\Attributes as OA;
 
 class FcmController extends Controller
 {
+    // method the updates device token
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    #[OA\Put(
+        path: '/api/update-device-token',
+        description: 'Update device token',
+        tags: ['Update Device Token']
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Update device token',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+
+                new OA\Property(property: 'message', type: 'string', example: 'Device token is updated successfully!'),
+
+
+            ]
+        )
+    )]
     public function updateDeviceToken(Request $request)
     {
         $request->validate([
@@ -20,6 +44,30 @@ class FcmController extends Controller
         return response()->json(['message' => 'Device token updated successfully']);
     }
 
+    // send firebase cloud message notification
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    #[OA\Post(
+        path: '/api/send-fcm-notification',
+        description: 'Send firebase cloud message notification',
+        tags: ['Firebase Notification']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Send firebase cloud message notification',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+
+                new OA\Property(property: 'message', type: 'string', example: 'Notification is sent successfully!'),
+
+
+            ]
+        )
+    )]
+
     public function sendFcmNotification(Request $request)
     {
         $request->validate([
@@ -30,6 +78,7 @@ class FcmController extends Controller
 
         $user = \App\Models\User::find($request->user_id);
         $fcm = $user->fcm_token;
+        $project_id = 'doorstep_view';
 
         if (!$fcm) {
             return response()->json(['message' => 'User does not have a device token'], 400);
@@ -37,7 +86,7 @@ class FcmController extends Controller
 
         $title = $request->title;
         $description = $request->body;
-        $doorstepView = config('services.fcm.project_id'); # INSERT COPIED PROJECT ID
+        $doorstepView = config('services.fcm.' . $project_id); # INSERT COPIED PROJECT ID
 
         $credentialsFilePath = Storage::path('app/json/file.json');
         $client = new GoogleClient();
@@ -65,7 +114,7 @@ class FcmController extends Controller
         $payload = json_encode($data);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/v1/projects/{$doorstepView}/messages:send");
+        curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/v1/projects/{$project_id}/messages:send");
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

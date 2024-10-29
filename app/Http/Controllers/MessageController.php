@@ -5,10 +5,34 @@ use App\Models\Media;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use openapi\Attributes as OA;
 
 class MessageController extends Controller
 {
     // Send a message
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    #[OA\Post(
+        path: '/api/messages/send',
+        description: 'Sending Messages in the system',
+        tags: ['Send Messages']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Sending Messages in the system',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'sender_id', type: 'integer', example: 1),
+                new OA\Property(property: 'receiver_id', type: 'integer', example: 5),
+                new OA\Property(property: 'body', type: 'string', example: 'Hello John Doe'),
+
+
+            ]
+        )
+    )]
     public function sendMessage(Request $request)
     {
         $request->validate([
@@ -43,7 +67,32 @@ class MessageController extends Controller
     }
 
     // Get messages for a specific conversation
-    public function getMessages($receiverId , Request $request)
+    /**
+     * @param string $receiverId
+     * @param Request $request
+     * @return Response
+     */
+    #[OA\Get(
+        path: '/api/messages/{receiverId}',
+        description: 'Receiving Messages',
+        tags: ['Receive Message']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Receiving Messages in the system',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'data', type: 'string', example: 'hello 1 , hello 2'),
+
+
+
+            ]
+        )
+    )]
+
+    public function getMessages(string $receiverId , Request $request)
     {
         $messages = Message::where(function ($query) use ($receiverId) {
             $query->where('sender_id', Auth::id())
@@ -69,6 +118,29 @@ class MessageController extends Controller
     }
 
     // Mark a message as read
+    /**
+     * @param string id
+     * @return Response
+     */
+    #[OA\Patch(
+        path: '/api/messages/{id}/read',
+        description: 'Mark messages as read',
+        tags: ['Mark Messages as read']
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Updating messages as read messages',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'success', type: 'string', example: true),
+                new OA\Property(property: 'message', type: 'string', example: 'Mark Message as read')
+
+
+
+            ]
+        )
+    )]
     public function markAsRead($id)
     {
         $message = Message::findOrFail($id);

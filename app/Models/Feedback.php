@@ -20,7 +20,7 @@ class Feedback extends Model
     public function user(){
      return $this->belongsTo(User::class);
     }
-    public function apartment(){
-        return $this->belongsTo(Apartment::class);
+    public function Property(){
+        return $this->belongsTo(Property::class);
     }
 }

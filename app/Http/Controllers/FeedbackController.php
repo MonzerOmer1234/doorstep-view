@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Attributes as OA;
 
 class FeedbackController extends Controller
 {
@@ -13,6 +14,32 @@ class FeedbackController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/feedback',
+        description: 'Submit Feedbacks',
+        tags: ['Submit Feedback']
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Submit Feedback',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'agents are fetched successfully!'),
+
+                new OA\Property(
+                    property: 'feedback',
+                    type: 'object',
+                    properties: [
+
+                        new OA\Property(property: 'rating', type: 'string', example: '5'),
+                        new OA\Property(property: 'comment', type: 'string', example: 'This is a feeedback')
+                    ]
+                )
+            ]
+        )
+    )]
     public function submitFeedback(Request $request)
     {
         // Validate the incoming request
@@ -48,21 +75,47 @@ class FeedbackController extends Controller
      * @param string $apartmentId
      * @return Response
      */
-     public function getFeedbackForApartment($apartmentId)
+    #[OA\Get(
+        path: '/api/properties/{propertyId}/feedback',
+        description: 'Get feedbacks for property',
+        tags: ['Get Feedback about property']
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Get feedbacks for property',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'Feedbacks for this property is fetched successfully!'),
+
+                new OA\Property(
+                    property: 'feedback',
+                    type: 'object',
+                    properties: [
+
+                        new OA\Property(property: 'rating', type: 'string', example: '5'),
+                        new OA\Property(property: 'comment', type: 'string', example: 'This is a nice villa')
+                    ]
+                )
+            ]
+        )
+    )]
+     public function getFeedbackForProperty($propertyId)
      {
          // Retrieve feedback for the specified apartment
-         $feedbacks = Feedback::where('apartment_id', $apartmentId)->with('user')->get();
+         $feedbacks = Feedback::where('property_id', $propertyId)->with('user')->get();
 
          if ($feedbacks->isEmpty()) {
              return response()->json([
                 'status' => 'fail',
-                'message' => 'No feedback found for this apartment.'],
+                'message' => 'No feedback found for this property.'],
                 404);
          }
 
          return response()->json([
             'status' => 'success',
-            'message' => 'feedbacks for this apartment is fetched successfully',
+            'message' => 'feedbacks for this property is fetched successfully',
             'feedbacks' => $feedbacks,
             ] , 200);
      }

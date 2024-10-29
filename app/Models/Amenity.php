@@ -18,8 +18,8 @@ class Amenity extends Model
          'longitude'
     ];
 
-    public function apartments(){
-        return $this->belongsToMany(Apartment::class , 'apartment_amenities');
+    public function properties(){
+        return $this->belongsToMany(Property::class , 'property_amenities');
     }
 
 

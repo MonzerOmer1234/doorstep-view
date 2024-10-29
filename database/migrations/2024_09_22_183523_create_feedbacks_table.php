@@ -21,11 +21,11 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->index()
                 ->name('fk_feedback_user'); // Explicit foreign key name
-                $table->foreignId('apartment_id')
-                ->constrained('apartments') // Specify apartments table
+            $table->foreignId('property_id')
+                ->constrained('properties') // Specify apartments table
                 ->onDelete('cascade')
                 ->index()
-                ->name('fk_feedback_apartment'); // Explicit foreign key name
+                ->name('fk_feedback_property'); // Explicit foreign key name
             $table->string('rating');
             $table->string('comment');
             // 'rating' ,
