@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('recommendations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('property_id')->constrained()->onDelete('cascade'); // The property for which recommendations are generated
+            
+            $table->foreignId('property_id')->references('id')->on('properties')->onDelete('cascade');// The property for which recommendations are generated
             $table->json('recommended_properties'); // Array of recommended properties IDs
             $table->timestamps();
         });

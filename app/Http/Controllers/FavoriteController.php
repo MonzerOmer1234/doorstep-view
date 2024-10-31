@@ -19,7 +19,24 @@ class FavoriteController extends Controller
     #[OA\Post(
         path: '/api/favorites',
         description: 'Create a new favorite',
-        tags: ['Create Favourite']
+        tags: ['Create Favourite'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'property_id', type: 'integer', example: 1),
+
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -69,7 +86,22 @@ class FavoriteController extends Controller
     #[OA\Delete(
         path: '/api/favorites/{id}',
         description: 'Delete a favorite',
-        tags: ['Delete Favourite']
+        tags: ['Delete Favourite'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "id",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -107,8 +139,19 @@ class FavoriteController extends Controller
     #[OA\Get(
         path: '/api/favorites',
         description: 'get the list of favorites',
-        tags: ['All Favourites']
+        tags: ['All Favourites'],
+        security : [["bearerAuth" => []]],
+
+
     )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+
     #[OA\Response(
         response: 200,
         description: 'get the list of favorites',

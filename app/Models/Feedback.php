@@ -11,7 +11,7 @@ class Feedback extends Model
 
     protected $fillable = [
         'user_id',
-        'apartment_id',
+        'property_id',
         'rating' ,
         'comment',
 

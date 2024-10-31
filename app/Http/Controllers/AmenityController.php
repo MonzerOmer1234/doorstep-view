@@ -7,6 +7,8 @@ use App\Models\Property;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
+
+
 class AmenityController extends Controller
 {
     /**
@@ -16,7 +18,15 @@ class AmenityController extends Controller
     #[OA\Get(
         path: '/api/amenities',
         description: 'getting all amenities',
-        tags: ['All Amenities']
+        tags: ['All Amenities'],
+        security : [["bearerAuth" => []]],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -58,8 +68,25 @@ class AmenityController extends Controller
     #[OA\Post(
         path: '/api/amenities',
         description: 'craete an amenity',
-        tags: ['Create an amenity']
-    )]
+        tags: ['Create an amenity'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'icon', type: 'string', format: 'email', example: 'icon 1')
+                ]
+            )
+        )
+        )]
+        #[OA\Parameter(
+            name: 'Authorization',
+            in: 'header',
+            description: 'Bearer {token}',
+            required: true,
+            schema: new OA\Schema(type: 'string')
+        )]
     #[OA\Response(
         response: 200,
         description: 'create an amenity',
@@ -105,13 +132,36 @@ class AmenityController extends Controller
      * @return Response
      */
     #[OA\Put(
-        path: '/api/agents/{agent}',
-        description: 'Update an agent',
-        tags: ['Update agent']
+        path: '/api/amenities/{amenity}',
+        description: 'Update amenity',
+        tags: ['Update amenity'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'icon', type: 'string', format: 'email', example: 'icon 1')
+                ]
+            )
+                ),
+        parameters: [new OA\Parameter(
+            name: "amenity",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
-        description: 'Updating an agent',
+        description: 'Updating amenity',
         content: new OA\JsonContent(
             type: 'object',
             properties: [
@@ -154,13 +204,28 @@ class AmenityController extends Controller
      * @return Response
      */
     #[OA\Delete(
-        path: '/api/agents/{id}',
-        description: 'Deleting an agent',
-        tags: ['Delete an agent']
+        path: '/api/amenities/{amenity}',
+        description: 'Deleting amenity',
+        tags: ['Delete amenity'],
+        security : [["bearerAuth" => []]],
+
+        parameters: [new OA\Parameter(
+            name: "amenity",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
-        description: 'Deleting an agent',
+        description: 'Deleting amenity',
         content: new OA\JsonContent(
             type: 'object',
             properties: [
@@ -186,9 +251,24 @@ class AmenityController extends Controller
 
     // Method to get nearby amenities for a specific property
     #[OA\Get(
-        path: '/api/properties/{id}/amenities',
+        path: '/api/properties/{propertyId}/amenities',
         description: 'get nearby amenities',
-        tags: ['Nearby amenities']
+        tags: ['Nearby amenities'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "propertyId",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+      
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,

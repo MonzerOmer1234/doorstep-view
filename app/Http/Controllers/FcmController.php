@@ -17,7 +17,25 @@ class FcmController extends Controller
     #[OA\Put(
         path: '/api/update-device-token',
         description: 'Update device token',
-        tags: ['Update Device Token']
+        tags: ['Update Device Token'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'user_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'fcm_token', type: 'string', format: 'email', example: 'xxxaadddff'),
+
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -52,8 +70,28 @@ class FcmController extends Controller
     #[OA\Post(
         path: '/api/send-fcm-notification',
         description: 'Send firebase cloud message notification',
-        tags: ['Firebase Notification']
+        tags: ['Firebase Notification'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'user_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'title', type: 'string', format: 'email', example: 'notification 1'),
+                    new OA\Property(property: 'body', type: 'string', format: 'email', example: 'message 1'),
+
+                ]
+            )
+        )
     )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+
     #[OA\Response(
         response: 200,
         description: 'Send firebase cloud message notification',

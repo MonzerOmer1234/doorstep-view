@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon');
-            $table->string('category'); // e.g., school, supermarket, hospital
+            $table->string('category')->default('school'); // e.g., school, supermarket, hospital
             $table->string('address')->nullable();
-            $table->decimal('latitude', 10, 7); // Geographical coordinates
-            $table->decimal('longitude', 10, 7); // Geographical coordinates
+            $table->decimal('latitude', 10, 7)->default(10); // Geographical coordinates
+            $table->decimal('longitude', 10, 7)->default(10); // Geographical coordinates
             $table->timestamps();
         });
     }

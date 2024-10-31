@@ -14,7 +14,16 @@ class ApiKeyController extends Controller
     #[OA\Get(
         path: '/api/api-keys',
         description: 'getting The api key that is not revoked',
-        tags: ['Api Key']
+        tags: ['Api Key'],
+        security : [["bearerAuth" => []]],
+
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,

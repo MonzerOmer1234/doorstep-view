@@ -15,7 +15,25 @@ class ImageController extends Controller
     #[OA\Post(
         path: '/api/upload-image',
         description: 'Storing images of the system',
-        tags: ['Store Images']
+        tags: ['Store Images'],
+
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'image', type: 'file', example: '1.png'),
+
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -24,7 +42,7 @@ class ImageController extends Controller
             type: 'object',
             properties: [
                 new OA\Property(property: 'image_path', type: 'string', example: 'path 1'),
-                new OA\Property(property: 'message', type: 'string', example: 'agents are fetched successfully!'),
+                new OA\Property(property: 'message', type: 'string', example: 'Image is stored successfully!'),
 
 
             ]

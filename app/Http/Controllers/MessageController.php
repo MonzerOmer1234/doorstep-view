@@ -17,7 +17,25 @@ class MessageController extends Controller
     #[OA\Post(
         path: '/api/messages/send',
         description: 'Sending Messages in the system',
-        tags: ['Send Messages']
+        tags: ['Send Messages'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'receiver_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'body', type: 'string', example: "message"),
+
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -75,8 +93,17 @@ class MessageController extends Controller
     #[OA\Get(
         path: '/api/messages/{receiverId}',
         description: 'Receiving Messages',
-        tags: ['Receive Message']
+        tags: ['Receive Message'],
+        security : [["bearerAuth" => []]],
     )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+
     #[OA\Response(
         response: 200,
         description: 'Receiving Messages in the system',

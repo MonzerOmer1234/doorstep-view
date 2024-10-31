@@ -23,7 +23,20 @@ class AuthController extends Controller
     #[OA\Post(
         path: '/api/auth/register',
         description: 'registering a user',
-        tags: ['register']
+        tags: ['register'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'email', example: '2345677uu'),
+                    new OA\Property(property: 'phone_number', type: 'string', format: 'email', example: '+249961077805'),
+                    new OA\Property(property: 'user_type', type: 'string', format: 'email', example: '2'),
+                ]
+            )
+        )
     )]
     #[OA\Response(
         response: 201,
@@ -74,7 +87,20 @@ class AuthController extends Controller
     #[OA\Post(
         path: '/api/auth/login',
         description: 'log a user',
-        tags: ['login']
+        tags: ['login'],
+        security : [["bearerAuth" => []]],
+
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
+
+                ]
+            )
+        )
     )]
     #[OA\Response(
         response: 200,
@@ -129,8 +155,17 @@ class AuthController extends Controller
     #[OA\Post(
         path: '/api/auth/logout',
         description: 'user is logging out',
-        tags: ['logout']
-    )]
+        tags: ['logout'],
+        security : [["bearerAuth" => []]],
+        )]
+    #[OA\Parameter(
+            name: 'Authorization',
+            in: 'header',
+            description: 'Bearer {token}',
+            required: true,
+            schema: new OA\Schema(type: 'string')
+        )]
+
     #[OA\Response(
         response: 200,
         description: 'User is logged out successfully',
@@ -160,7 +195,18 @@ class AuthController extends Controller
     #[OA\Post(
         path: '/api/auth/password/forgot',
         description: 'forgetting password',
-        tags: ['Forgot Password']
+        tags: ['Forgot Password'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+
+
+                ]
+            )
+        )
     )]
     #[OA\Response(
         response: 200,
@@ -192,9 +238,25 @@ class AuthController extends Controller
      * @return Response
      */
     #[OA\Post(
-        path: '/api/auth/passsword/reset',
+        path: '/api/auth/password/reset',
+
         description: 'reset password',
-        tags: ['Resetting Password']
+        tags: ['Resetting Password'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'mmmmmmmm'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'mmmmmmmm'),
+                    new OA\Property(property: 'token', type: 'string', format: 'password', example: 'mmmmmmxcvveccvvrv'),
+
+
+
+                ]
+            )
+        )
     )]
     #[OA\Response(
         response: 200,
@@ -214,6 +276,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
             'token' => 'required',
+
         ]);
 
         $status = Password::reset(

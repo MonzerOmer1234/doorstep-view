@@ -32,23 +32,24 @@ Route::prefix('/auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     // Password Reset
-    Route::post('/password/reset', [AuthController::class, 'resetPassword']);
+    Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.reset');
     Route::post('/password/forgot', [AuthController::class, 'forgotPassword']);
 });
+
 // Agents
 Route::apiResource('/agents', AgentController::class)->middleware('auth:sanctum');
-
 // Agent Registration
 Route::post('/agents/register', [AgentRegistrationController::class, 'register']);
 Route::post('/agents/login', [AgentRegistrationController::class, 'login']);
-Route::post('/agents/logout', [AgentRegistrationController::class, 'logout'])->middleware('auth');
+Route::post('/agents/logout', [AgentRegistrationController::class, 'logout'])->middleware('auth:sanctum');
+
 
 
 
 // amenities
 Route::apiResource('/amenities' , AmenityController::class)->middleware('auth:sanctum');
 // nearby amenities
-Route::get('properties/{id}/amenities', [AmenityController::class, 'getNearbyAmenities'])->middleware('auth:sanctum');
+Route::get('properties/{propertyId}/amenities', [AmenityController::class, 'getNearbyAmenities'])->middleware('auth:sanctum');
 
 // api key
 Route::get('/api-keys' , [ApiKeyController::class , 'index' ])->middleware('auth:sanctum');
@@ -72,9 +73,9 @@ Route::get('/properties/{propertyId}/feedback', [FeedbackController::class, 'get
 Route::post('/upload-image', [ImageController::class, 'store'])->middleware('auth:sanctum'); // For image upload
 // messages
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/messages/send', [MessageController::class, 'sendMessage']);
-    Route::get('/messages/{receiverId}', [MessageController::class, 'getMessages']);
-    Route::patch('/messages/{id}/read', [MessageController::class, 'markAsRead']);
+    Route::post('/messages/send', [MessageController::class, 'sendMessage'])->middleware('auth:sanctum');
+    Route::get('/messages/{receiverId}', [MessageController::class, 'getMessages'])->middleware('auth:sanctum');
+    Route::patch('/messages/{id}/read', [MessageController::class, 'markAsRead'])->middleware('auth:sanctum');
 });
 //properties
 Route::apiResource('/properties', PropertyController::class)->middleware('auth:sanctum');
@@ -85,7 +86,7 @@ Route::delete('/properties/detach-amenity/{propertyId}/{amenityId}' , [PropertyC
 Route::get('/nearby-properties', [PropertyController::class, 'nearbyProperties'])->middleware('auth:sanctum');
 
 // Recommendation System
-Route::get('/recommendations/{propertyId}', [RecommendationController::class, 'fetchRecommendations'])->middleware('auth:Sanctum');
+Route::get('/recommendations/{propertyId}', [RecommendationController::class, 'fetchRecommendations'])->middleware('auth:sanctum');
 Route::post('/recommendations/{propertyId}/update', [RecommendationController::class, 'updateRecommendations'])->middleware('auth:sanctum');
 
 
@@ -96,7 +97,7 @@ Route::get('/search/properties', [SearchController::class, 'search'])->middlewar
 Route::apiResource('/users' , UserProfileController::class)->middleware('auth:sanctum');
 
 // visit request
-Route::apiResource('/visitRequests' , VisitRequestController::class)->middleware('auth:sanctum');
+Route::apiResource('/visit-requests' , VisitRequestController::class)->middleware('auth:sanctum');
 
 
 

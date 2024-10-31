@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 use App\Models\Agent;
 use App\Models\User;
-use Google\Service\ArtifactRegistry\Hash;
+use Illuminate\Support\Facades\Hash;
 use Google\Service\Docs\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use OpenApi\Attributes as OA;
 
 
@@ -26,7 +27,20 @@ class AgentRegistrationController extends Controller
         path: '/api/agents/register',
         description: 'Registers a new agent',
 
-        tags: ['Agent']
+        tags: ['Agent Registeration'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'email', example: '2345677uu'),
+                    new OA\Property(property: 'phone_number', type: 'string', format: 'email', example: '+249961077805'),
+                    new OA\Property(property: 'user_type', type: 'string', format: 'email', example: '2'),
+                ]
+            )
+        )
     )]
     #[OA\Response(
         response: 200,
@@ -66,11 +80,14 @@ class AgentRegistrationController extends Controller
 
         // Create the agent
         $user = User::create($request->all());
+        FacadesAuth::login($user);
+        $token = $user->createToken($request->name)->plainTextToken;
 
         return response()->json([
             'status' => 'success',
             'message' => 'Agent is created successfully',
-            'user' => $user
+            'user' => $user,
+            'token' => $token
         ], 201);
     }
      /**
@@ -82,8 +99,23 @@ class AgentRegistrationController extends Controller
     #[OA\Post(
         path: '/api/agents/login',
         description: 'logins an existing agent',
-        tags: ['login']
+        tags: ['Agent login'],
+        
+
+
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
+
+                ]
+            )
+        )
     )]
+
     #[OA\Response(
         response: 200,
         description: 'Agent is logged in successfully',
@@ -136,8 +168,17 @@ class AgentRegistrationController extends Controller
     #[OA\Post(
         path: '/api/agents/logout',
         description: 'logout an existing agent',
-        tags: ['logout']
-    )]
+        tags: ['Agent logout'],
+        security : [["bearerAuth" => []]],
+        )]
+    #[OA\Parameter(
+            name: 'Authorization',
+            in: 'header',
+            description: 'Bearer {token}',
+            required: true,
+            schema: new OA\Schema(type: 'string')
+        )]
+
     #[OA\Response(
         response: 200,
         description: 'Agent is logged out successfully',

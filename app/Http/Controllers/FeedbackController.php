@@ -17,7 +17,27 @@ class FeedbackController extends Controller
     #[OA\Post(
         path: '/api/feedback',
         description: 'Submit Feedbacks',
-        tags: ['Submit Feedback']
+        tags: ['Submit Feedback'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'user_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'property_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'rating', type: 'string', example: "5"),
+
+
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -45,7 +65,7 @@ class FeedbackController extends Controller
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
-            'apartment_id' => 'required|exists:apartments,id',
+            'property_id' => 'required|exists:properties,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:255',
         ]);
@@ -57,7 +77,7 @@ class FeedbackController extends Controller
         // Create new feedback entry
         $feedback = Feedback::create([
             'user_id' => $request->user_id,
-            'apartment_id' => $request->apartment_id,
+            'property_id' => $request->proprty_id,
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
@@ -78,7 +98,23 @@ class FeedbackController extends Controller
     #[OA\Get(
         path: '/api/properties/{propertyId}/feedback',
         description: 'Get feedbacks for property',
-        tags: ['Get Feedback about property']
+        tags: ['Get Feedback about property'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "propertyId",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+
+
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,

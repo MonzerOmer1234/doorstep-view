@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agent;
+use Google\Service\Dataflow\Parameter;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -21,7 +22,16 @@ class AgentController extends Controller
  #[OA\Get(
         path: '/api/agents',
         description: 'getting all agents',
-        tags: ['All agents']
+        tags: ['All agents'],
+        security : [["bearerAuth" => []]],
+
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -62,7 +72,24 @@ class AgentController extends Controller
     #[OA\Post(
         path: '/api/agents',
         description: 'creating an agent',
-        tags: ['Store agents']
+        tags: ['Store agents'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com')
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -107,13 +134,27 @@ class AgentController extends Controller
 
     /**
      * retrieves a specific agent from the database
-     * @param string $id
+     * @param Agent $agent
      * @return \Illuminate\Http\JsonResponse
      */
     #[OA\Get(
         path: '/api/agents/{agent}',
         description: 'Show the details of a single user',
-        tags: ['Details of an agent']
+        tags: ['Details of an agent'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "agent",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -137,9 +178,9 @@ class AgentController extends Controller
         )
     )]
 
-    public function show(string $id)
+    public function show(Agent $agent)
     {
-        $agent = Agent::findOrFail($id);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Agent retrieved successfully',
@@ -149,13 +190,39 @@ class AgentController extends Controller
     /**
      * updates a specific agent in the database
      * @param Request $request
-     * @param string $id
+     * @param Agent $agent
      * @return \Illuminate\Http\JsonResponse
      */
     #[OA\Patch(
         path: '/api/agents/{agent}',
         description: 'update the details of a single user',
-        tags: ['Updating agent']
+        tags: ['Updating agent'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "agent",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'phone', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'bio', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'profile_pic', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -179,9 +246,9 @@ class AgentController extends Controller
         )
     )]
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Agent $agent)
     {
-        $agent = Agent::findOrFail($id);
+
 
         $request->validate([
             'name' => 'nullable|string|max:255',
@@ -200,14 +267,27 @@ class AgentController extends Controller
     }
     /**
      * deletes a specific agent from the database
-     * @param string $id
+     * @param Agent $agent
      * @return \Illuminate\Http\JsonResponse
      */
     #[OA\Delete(
         path: '/api/agents/{agent}',
         description: 'Delete a single user',
-
-        tags: ['Deleting an Agent']
+        tags: ['Deleting an Agent'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "agent",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -222,9 +302,9 @@ class AgentController extends Controller
         )
     )]
 
-    public function destroy(string $id)
+    public function destroy(Agent $agent)
     {
-        $agent = Agent::findOrFail($id);
+
         $agent->delete();
         return response()->json([
             'status' => 'success',
