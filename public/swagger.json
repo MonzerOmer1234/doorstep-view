@@ -867,7 +867,6 @@
                                     },
                                     "phone_number": {
                                         "type": "string",
-                                        "format": "email",
                                         "example": "+249961077805"
                                     },
                                     "user_type": {
@@ -1068,7 +1067,6 @@
                                     },
                                     "phone_number": {
                                         "type": "string",
-                                        "format": "email",
                                         "example": "+249961077805"
                                     },
                                     "user_type": {
@@ -1822,9 +1820,9 @@
         "/api/upload-image": {
             "post": {
                 "tags": [
-                    "Store Images"
+                    "Image Upload"
                 ],
-                "description": "Storing images of the system",
+                "description": "Upload an image file",
                 "operationId": "63762ba770c26372fe804f1bf6936565",
                 "parameters": [
                     {
@@ -1840,12 +1838,13 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "properties": {
                                     "image": {
-                                        "type": "file",
-                                        "example": "1.png"
+                                        "description": "Image file to upload",
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -2007,6 +2006,25 @@
                 ],
                 "description": "Mark messages as read",
                 "operationId": "42e15a6796c70cd699eb810186a73508",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Updating messages as read messages",
@@ -2028,7 +2046,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/properties": {
@@ -2039,6 +2062,17 @@
                 "summary": "specifies all the properties in the database",
                 "description": "Get all properties",
                 "operationId": "ae50890d9da51a5cfe01cd2151d4077a",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Get all properties",
@@ -2081,7 +2115,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -2090,6 +2129,53 @@
                 "summary": "creates a new property in the database",
                 "description": "Store a property",
                 "operationId": "debc241247e30f0490b9e236483217d0",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "property_type": {
+                                        "type": "string",
+                                        "example": "villa"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "good villa"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "villa 1"
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": 20.5
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Kassala"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Create a property",
@@ -2132,17 +2218,41 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/properties/{id}": {
+        "/api/properties/{property}": {
             "get": {
                 "tags": [
                     "The details of a property"
                 ],
                 "summary": "retrieves a specific property from the database",
                 "description": "Get the details of a property",
-                "operationId": "1ffeff79c18b3281ff5e01339a5831e7",
+                "operationId": "7e987b4451d73bd2c13bcade3c20cde1",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "The details of a property",
@@ -2156,7 +2266,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "property is fethced successfully!"
+                                            "example": "property is fetched successfully!"
                                         },
                                         "data": {
                                             "properties": {
@@ -2185,7 +2295,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -2193,7 +2308,26 @@
                 ],
                 "summary": "deletes a specific property from the database",
                 "description": "Delete property",
-                "operationId": "a1f3cd4975f784df9ae3f810e13a2066",
+                "operationId": "b5476a186ab6d1421ec465f6bd179c55",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Deletion of a property",
@@ -2215,7 +2349,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -2223,7 +2362,58 @@
                 ],
                 "summary": "updates a specific property in the database",
                 "description": "Update a property",
-                "operationId": "464374ca18c6cb997d608b5b9940fa83",
+                "operationId": "ec09c871d5a8411590d5a7c8cf318858",
+                "parameters": [
+                    {
+                        "name": "property",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "property_type": {
+                                        "type": "string",
+                                        "example": "villa"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "good villa"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "villa 1"
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": 20.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Update a property",
@@ -2266,16 +2456,40 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/properties/feature": {
+        "/api/properties/feature/{propertyId}": {
             "patch": {
                 "tags": [
                     "Featuring Properties"
                 ],
                 "description": "Featuring Properties",
-                "operationId": "b5dc8b40ee2729fc85eee0418822ac55",
+                "operationId": "6678798c73cbe9094957433bda68bea5",
+                "parameters": [
+                    {
+                        "name": "propertyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Featuring properties",
@@ -2293,7 +2507,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/properties/attach-amenity/{propertyId}/{amenityId}": {
@@ -2304,6 +2523,33 @@
                 "summary": "specifies the attachment of amenity to property",
                 "description": "attach amenity",
                 "operationId": "09f6a3093d8b3244250bac8d25390f79",
+                "parameters": [
+                    {
+                        "name": "propertyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "amenityId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "attach amenities",
@@ -2321,7 +2567,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/properties/detach-amenity/{propertyId}/{amenityId}": {
@@ -2332,6 +2583,33 @@
                 "summary": "specifies the detachment of amenity from property",
                 "description": "attach amenity",
                 "operationId": "d2f5e080cfed352187bcfa603b324c13",
+                "parameters": [
+                    {
+                        "name": "propertyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "amenityId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Detach amenities",
@@ -2353,43 +2631,119 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/nearby-properties": {
+        "/api/properties/nearby/{userLat}/{userLng}/{radius?}": {
             "get": {
                 "tags": [
                     "Nearby Properties"
                 ],
-                "description": "These are nearby properties",
-                "operationId": "3e7eec4d9f72c04d8f280567c7a5b8da",
+                "summary": "Get properties within a specified radius from given coordinates",
+                "description": "Get properties within specified radius",
+                "operationId": "9fd88cd46dad1d9c91b2814643308d46",
+                "parameters": [
+                    {
+                        "name": "userLat",
+                        "in": "path",
+                        "description": "User's latitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "userLng",
+                        "in": "path",
+                        "description": "User's latitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "userLng",
+                        "in": "path",
+                        "description": "User's longitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "path",
+                        "description": "Search radius in kilometers",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 5
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "These are nearby properties",
+                        "description": "List of nearby properties",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "location": {
+                                                "type": "string"
+                                            },
+                                            "latitude": {
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "longitude": {
+                                                "type": "number",
+                                                "format": "float"
+                                            },
+                                            "distance": {
+                                                "description": "Distance in kilometers",
+                                                "type": "number",
+                                                "format": "float"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "properties": {
-                                            "properties": {
-                                                "location": {
-                                                    "type": "string",
-                                                    "example": "Egypt"
-                                                },
-                                                "property_type": {
-                                                    "type": "string",
-                                                    "example": "villa"
-                                                },
-                                                "bedrooms": {
-                                                    "type": "integer",
-                                                    "example": 3
-                                                },
-                                                "bathrooms": {
-                                                    "type": "integer",
-                                                    "example": 10
-                                                }
-                                            },
-                                            "type": "object"
+                                        "error": {
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -2397,7 +2751,100 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/nearby-properties": {
+            "get": {
+                "tags": [
+                    "Nearby Properties"
+                ],
+                "description": "Get nearby properties based on coordinates",
+                "operationId": "3e7eec4d9f72c04d8f280567c7a5b8da",
+                "parameters": [
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "description": "User's latitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "description": "User's longitude",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "properties": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    },
+                                                    "property_type": {
+                                                        "type": "string"
+                                                    },
+                                                    "latitude": {
+                                                        "type": "number"
+                                                    },
+                                                    "longitude": {
+                                                        "type": "number"
+                                                    },
+                                                    "distance": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/recommendations/{propertyId}": {
@@ -2407,6 +2854,25 @@
                 ],
                 "description": "Get Recommendations",
                 "operationId": "5c274594e595c86c6edfc40a2bf6874a",
+                "parameters": [
+                    {
+                        "name": "propertyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Get all recommendations",
@@ -2424,26 +2890,50 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/recommendations/{propertyId}/update": {
-            "get": {
+            "post": {
                 "tags": [
                     "Update Recommendations"
                 ],
                 "description": "Update Recommendations",
-                "operationId": "470c83fbf85ba5dfca286faeed303814",
+                "operationId": "8d4c3bc21e73c01e5a0fb3f8cfc1644d",
+                "parameters": [
+                    {
+                        "name": "propertyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Update recommendations",
+                        "description": "Update a recommendations",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Recommendations updated successfully"
+                                            "example": "Recommendation is updated successfully"
                                         }
                                     },
                                     "type": "object"
@@ -2451,7 +2941,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/search/properties": {
@@ -2461,6 +2956,17 @@
                 ],
                 "description": "Search Properties",
                 "operationId": "f8d8cef2df212e6929e918cef4991db1",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Search Properties",
@@ -2495,7 +3001,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users": {
@@ -2506,6 +3017,17 @@
                 "summary": "Display a listing of the resource.",
                 "description": "getting all Users",
                 "operationId": "c5976bad3b33b4bac3c5b5b26c223ba6",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Fetching all Users",
@@ -2544,7 +3066,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -2553,6 +3080,54 @@
                 "summary": "Store a newly created resource in storage.",
                 "description": "Create a user",
                 "operationId": "29e2985647b8762606dda4b47c39da39",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "user_type": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Create a user",
@@ -2591,17 +3166,41 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/users/{id}": {
+        "/api/users/{user}": {
             "delete": {
                 "tags": [
                     "Delete a user"
                 ],
                 "summary": "Remove the specified resource from storage.",
                 "description": "Delete a user",
-                "operationId": "43a9a6a05aaba0e01950f7d050179b8f",
+                "operationId": "ce339b8089c57e270fe7e62c4f9ab76e",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Delete a user",
@@ -2623,7 +3222,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -2631,7 +3235,59 @@
                 ],
                 "summary": "Update the specified resource in storage.",
                 "description": "Update a user",
-                "operationId": "39bd6c84ab41922b72c095d4315a0814",
+                "operationId": "b357fa5e7909a3e85893ac87716d68d8",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "+201158972855"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "user_type": {
+                                        "type": "string",
+                                        "example": "4"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Update a user",
@@ -2670,16 +3326,114 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/api/visitRequests/create": {
+        "/api/visitRequests": {
+            "get": {
+                "tags": [
+                    "Visit Requests"
+                ],
+                "description": "All visit requests",
+                "operationId": "c4dcea50b63ab8c52fe17b20a026a4ba",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "All visit requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "property_id": {
+                                                    "type": "unsignedBigInteger",
+                                                    "example": 1
+                                                },
+                                                "user_id": {
+                                                    "type": "unsignedBigInteger",
+                                                    "example": 2
+                                                },
+                                                "requested_at": {
+                                                    "type": "dateTime",
+                                                    "example": -1991
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "pending"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Create a visist request"
                 ],
                 "description": "create a visit request",
-                "operationId": "97f487bafab3f68ad3ee9551a70d8be9",
+                "operationId": "541f009c7808f1e3b98573eb28c11744",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "property_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "requested_at": {
+                                        "type": "dateTime",
+                                        "example": "2024-10-23 17:47:12"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Create a visist request",
@@ -2722,64 +3476,61 @@
                             }
                         }
                     }
-                }
-            }
-        },
-        "/api/visitRequests": {
-            "get": {
-                "tags": [
-                    "Visit Requests"
-                ],
-                "description": "All visit requests",
-                "operationId": "c4dcea50b63ab8c52fe17b20a026a4ba",
-                "responses": {
-                    "200": {
-                        "description": "All visit requests",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "property_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 1
-                                                },
-                                                "user_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 2
-                                                },
-                                                "requested_at": {
-                                                    "type": "dateTime",
-                                                    "example": -1991
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "example": "pending"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
                     }
-                }
+                ]
             }
         },
-        "/api/visitRequests/{id}": {
+        "/api/visitRequests/{visitRequest}": {
             "patch": {
                 "tags": [
                     "Update Visit Request"
                 ],
                 "description": "Update visit request",
-                "operationId": "11d0c79ff2842471ec1368628b3b049c",
+                "operationId": "fd3e64e5445a08dd0c8071f07f09a88f",
+                "parameters": [
+                    {
+                        "name": "visitRequest",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pending",
+                                            "approved",
+                                            "rejected"
+                                        ],
+                                        "example": "approved"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Update visit request",
@@ -2811,7 +3562,7 @@
                                                 },
                                                 "status": {
                                                     "type": "string",
-                                                    "example": "pending"
+                                                    "example": "Pending"
                                                 }
                                             },
                                             "type": "object"
@@ -2822,7 +3573,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -2943,8 +3699,8 @@
             "description": "Get Feedback about property"
         },
         {
-            "name": "Store Images",
-            "description": "Store Images"
+            "name": "Image Upload",
+            "description": "Image Upload"
         },
         {
             "name": "Send Messages",

@@ -11,7 +11,8 @@ class Property extends Model
     use HasFactory , SoftDeletes;
 
     protected $fillable = [
-        'agent_id', // Foreign key for the agent
+        'agent_id',
+        'user_id', // Foreign key for the agent
         'title',
         'description',
         'price',

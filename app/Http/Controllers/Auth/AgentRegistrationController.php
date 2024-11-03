@@ -36,7 +36,7 @@ class AgentRegistrationController extends Controller
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
                     new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
                     new OA\Property(property: 'password_confirmation', type: 'string', format: 'email', example: '2345677uu'),
-                    new OA\Property(property: 'phone_number', type: 'string', format: 'email', example: '+249961077805'),
+                    new OA\Property(property: 'phone_number', type: 'string', example: '+249961077805'),
                     new OA\Property(property: 'user_type', type: 'string', format: 'email', example: '2'),
                 ]
             )
@@ -68,7 +68,7 @@ class AgentRegistrationController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:agents|max:255',
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20|phone',
             'bio' => 'nullable|string',
             'profile_picture' => 'nullable|string',
             'password' => ['required', 'confirmed', 'min:8'],
@@ -100,7 +100,7 @@ class AgentRegistrationController extends Controller
         path: '/api/agents/login',
         description: 'logins an existing agent',
         tags: ['Agent login'],
-        
+
 
 
         requestBody: new OA\RequestBody(

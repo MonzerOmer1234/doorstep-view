@@ -15,7 +15,16 @@ class UserProfileController extends Controller
     #[OA\Get(
         path: '/api/users',
         description: 'getting all Users',
-        tags: ['All Users']
+        tags: ['All Users'],
+        security : [["bearerAuth" => []]],
+
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -59,7 +68,28 @@ class UserProfileController extends Controller
     #[OA\Post(
         path: '/api/users',
         description: 'Create a user',
-        tags: ['Create a user']
+        tags: ['Create a user'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string',  example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password_confirmation', type: 'string',  example: 'john.doe@example.com'),
+                    new OA\Property(property: 'phone_number', type: 'string',  example: 'john.doe@example.com'),
+                    new OA\Property(property: 'user_type', type: 'string',  example: 'john.doe@example.com'),
+                    ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -110,10 +140,38 @@ class UserProfileController extends Controller
      * @return Response
      */
     #[OA\Patch(
-        path: '/api/users/{id}',
+        path: '/api/users/{user}',
         description: 'Update a user',
-        tags: ['Update a user']
+        tags: ['Update a user'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "user",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'phone_number', type: 'string',  example: '+201158972855'),
+                    new OA\Property(property: 'password', type: 'string',  example: 'john.doe@example.com'),
+                    new OA\Property(property: 'user_type', type: 'string',  example: '4'),
+                ]
+            )
+        )
     )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+
+
     #[OA\Response(
         response: 201,
         description: 'Update a user',
@@ -143,7 +201,7 @@ class UserProfileController extends Controller
         $fields = $request->validate([
             'name' => 'required |max:255',
             'email' => 'required |unique:users',
-            'password' => 'required | min:8| confirmed',
+            'password' => 'required | min:8',
             'phone_number' => ['required', 'phone'],
             'user_type' => 'required'
         ]);
@@ -164,9 +222,23 @@ class UserProfileController extends Controller
      * @return Response
      */
     #[OA\Delete(
-        path: '/api/users/{id}',
+        path: '/api/users/{user}',
         description: 'Delete a user',
-        tags: ['Delete a user']
+        tags: ['Delete a user'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "user",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -177,7 +249,7 @@ class UserProfileController extends Controller
                 new OA\Property(property: 'status', type: 'string', example: 'success'),
                 new OA\Property(property: 'message', type: 'string', example: 'User is deleted successfully!'),
 
-               
+
             ]
         )
     )]

@@ -77,9 +77,9 @@ class FeedbackController extends Controller
         // Create new feedback entry
         $feedback = Feedback::create([
             'user_id' => $request->user_id,
-            'property_id' => $request->proprty_id,
+            'property_id' => $request->property_id,
             'rating' => $request->rating,
-            'comment' => $request->comment,
+            'comment' => $request->comment ?? '',
         ]);
 
         return response()->json(

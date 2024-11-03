@@ -17,7 +17,15 @@ class SearchController extends Controller
     #[OA\Get(
         path: '/api/search/properties',
         description: 'Search Properties',
-        tags: ['Search Properties']
+        tags: ['Search Properties'],
+        security : [["bearerAuth" => []]],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,

@@ -152,7 +152,21 @@ class MessageController extends Controller
     #[OA\Patch(
         path: '/api/messages/{id}/read',
         description: 'Mark messages as read',
-        tags: ['Mark Messages as read']
+        tags: ['Mark Messages as read'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "id",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,

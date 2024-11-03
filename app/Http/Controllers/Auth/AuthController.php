@@ -32,7 +32,7 @@ class AuthController extends Controller
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
                     new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
                     new OA\Property(property: 'password_confirmation', type: 'string', format: 'email', example: '2345677uu'),
-                    new OA\Property(property: 'phone_number', type: 'string', format: 'email', example: '+249961077805'),
+                    new OA\Property(property: 'phone_number', type: 'string', example: '+249961077805'),
                     new OA\Property(property: 'user_type', type: 'string', format: 'email', example: '2'),
                 ]
             )
@@ -267,6 +267,7 @@ class AuthController extends Controller
                 new OA\Property(property: 'message', type: 'string', example: 'Password reset successful! | Failed to reset password.'),
 
 
+
             ]
         )
     )]
@@ -276,8 +277,10 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
             'token' => 'required',
+            'password_confirmation' => 'required' // Add this validation
+    ]);
 
-        ]);
+       
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),

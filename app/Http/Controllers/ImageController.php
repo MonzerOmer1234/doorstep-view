@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use openapi\Attributes as OA;
+use OpenApi\Attributes as OA;
 
 class ImageController extends Controller
 {
@@ -14,19 +14,23 @@ class ImageController extends Controller
      */
     #[OA\Post(
         path: '/api/upload-image',
-        description: 'Storing images of the system',
-        tags: ['Store Images'],
-
+        description: 'Upload an image file',
+        tags: ['Image Upload'],
         security : [["bearerAuth" => []]],
+
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(
-                properties: [
-                    new OA\Property(property: 'image', type: 'file', example: '1.png'),
 
-                ]
+            content: new OA\MediaType(
+                mediaType: 'multipart/form-data',
+                schema: new OA\Schema(
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'image', type: 'string', format: 'binary', description: 'Image file to upload'),
+                    ]
+                )
             )
-        )
+        ),
     )]
     #[OA\Parameter(
         name: 'Authorization',

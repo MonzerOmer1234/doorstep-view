@@ -12,7 +12,7 @@ class Search
     public function __construct()
     {
         // Initialize the query with the Apartment model
-        $this->query = Apartment::query();
+        $this->query = Property::query();
     }
 
     public function filter(array $filters): Collection

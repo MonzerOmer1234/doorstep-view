@@ -78,12 +78,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/messages/{id}/read', [MessageController::class, 'markAsRead'])->middleware('auth:sanctum');
 });
 //properties
+Route::patch( '/properties/feature/{propertyId}' , [PropertyController::class , 'feature'])->middleware('auth:sanctum');
 Route::apiResource('/properties', PropertyController::class)->middleware('auth:sanctum');
-Route::patch( '/properties/feature' , [PropertyController::class , 'feature'])->middleware('auth:sanctum');
 
 Route::put('/properties/attach-amenity/{propertyId}/{amenityId}' , [PropertyController::class , 'attachAmenity'])->middleware('auth:sanctum');
 Route::delete('/properties/detach-amenity/{propertyId}/{amenityId}' , [PropertyController::class , 'detachAmenity'])->middleware('auth:sanctum');
-Route::get('/nearby-properties', [PropertyController::class, 'nearbyProperties'])->middleware('auth:sanctum');
+Route::get('/nearby-properties', [PropertyController::class, 'nearByProperties'])->middleware('auth:sanctum');
 
 // Recommendation System
 Route::get('/recommendations/{propertyId}', [RecommendationController::class, 'fetchRecommendations'])->middleware('auth:sanctum');
@@ -97,7 +97,8 @@ Route::get('/search/properties', [SearchController::class, 'search'])->middlewar
 Route::apiResource('/users' , UserProfileController::class)->middleware('auth:sanctum');
 
 // visit request
-Route::apiResource('/visit-requests' , VisitRequestController::class)->middleware('auth:sanctum');
+Route::apiResource('/visitRequests' , VisitRequestController::class)->middleware('auth:sanctum');
+
 
 
 

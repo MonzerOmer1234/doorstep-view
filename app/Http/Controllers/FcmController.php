@@ -5,7 +5,9 @@ use Illuminate\Http\Request;
 use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use openApi\Attributes as OA;
+
 
 class FcmController extends Controller
 {
@@ -19,6 +21,7 @@ class FcmController extends Controller
         description: 'Update device token',
         tags: ['Update Device Token'],
         security : [["bearerAuth" => []]],
+
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -108,70 +111,88 @@ class FcmController extends Controller
 
     public function sendFcmNotification(Request $request)
     {
+        // Validate request
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string',
             'body' => 'required|string',
         ]);
 
-        $user = \App\Models\User::find($request->user_id);
-        $fcm = $user->fcm_token;
-        $project_id = 'doorstep_view';
-
-        if (!$fcm) {
+        // Get user and check FCM token
+        $user = \App\Models\User::findOrFail($request->user_id);
+        if (!$user->fcm_token) {
             return response()->json(['message' => 'User does not have a device token'], 400);
         }
 
-        $title = $request->title;
-        $description = $request->body;
-        $doorstepView = config('services.fcm.' . $project_id); # INSERT COPIED PROJECT ID
+        // Check Firebase credentials file
+        $credentialsPath = 'json/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json';
+        if (!Storage::exists($credentialsPath)) {
+            Log::error('Firebase credentials file missing at: ' . Storage::path($credentialsPath));
+            return response()->json(['message' => 'Firebase configuration error'], 500);
+        }
 
-        $credentialsFilePath = Storage::path('app/json/file.json');
-        $client = new GoogleClient();
-        $client->setAuthConfig($credentialsFilePath);
-        $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
-        $client->refreshTokenWithAssertion();
-        $token = $client->getAccessToken();
+        try {
+            // Initialize Google Client
+            $client = new GoogleClient();
+            $client->setAuthConfig(Storage::path($credentialsPath));
+            $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
+            $client->refreshTokenWithAssertion();
+            $accessToken = $client->getAccessToken()['access_token'];
 
-        $access_token = $token['access_token'];
+            // Prepare notification data
+            $projectId = config('services.fcm.project_id', 'doorstep_view');
+            $data = [
+                'message' => [
+                    'token' => $user->fcm_token,
+                    'notification' => [
+                        'title' => $request->title,
+                        'body' => $request->body,
+                    ],
+                    // Optional: Add data payload if needed
+                    'data' => [
+                        'click_action' => 'FLUTTER_NOTIFICATION_CLICK',
+                        'type' => 'notification'
+                    ]
+                ]
+            ];
 
-        $headers = [
-            "Authorization: Bearer $access_token",
-            'Content-Type: application/json'
-        ];
+            // Send notification using Laravel's HTTP client
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ])->post(
+                "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send",
+                $data
+            );
 
-        $data = [
-            "message" => [
-                "token" => $fcm,
-                "notification" => [
-                    "title" => $title,
-                    "body" => $description,
-                ],
-            ]
-        ];
-        $payload = json_encode($data);
+            // Handle response
+            if ($response->successful()) {
+                return response()->json([
+                    'message' => 'Notification sent successfully',
+                    'response' => $response->json()
+                ]);
+            }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/v1/projects/{$project_id}/messages:send");
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable verbose output for debugging
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        curl_close($ch);
-
-        if ($err) {
-            return response()->json([
-                'message' => 'Curl Error: ' . $err
-            ], 500);
-        } else {
-            return response()->json([
-                'message' => 'Notification has been sent',
-                'response' => json_decode($response, true)
+            // Log error if request fails
+            Log::error('FCM Notification failed', [
+                'error' => $response->body(),
+                'status' => $response->status()
             ]);
+
+            return response()->json([
+                'message' => 'Failed to send notification',
+                'error' => $response->json()
+            ], $response->status());
+
+        } catch (\Exception $e) {
+            Log::error('FCM Notification error: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+
+            return response()->json([
+                'message' => 'Error sending notification',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }

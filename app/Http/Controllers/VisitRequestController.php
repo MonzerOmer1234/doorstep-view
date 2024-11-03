@@ -2,21 +2,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\VisitRequest;
+use Google\Auth\Cache\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use openapi\Attributes as OA;
 
 class VisitRequestController extends Controller
 {
+
+
     /**
      * @param Request $request
      * @return Response
      */
     // Create a visit request
     #[OA\Post(
-        path: '/api/visitRequests/create',
+        path: '/api/visitRequests',
         description: 'create a visit request',
-        tags: ['Create a visist request']
+        tags: ['Create a visist request'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'property_id', type: 'integer', example: 1),
+                    new OA\Property(property: 'requested_at', type: 'dateTime', example: '2024-10-23 17:47:12')
+                ]
+            )
+        )
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 201,
@@ -40,11 +60,11 @@ class VisitRequestController extends Controller
             ]
         )
     )]
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'property_id' => 'required|exists:properties,id',
-            'requested_at' => 'required|date',
+            'requested_at' => 'required|date_format:Y-m-d H:i:s',
         ]);
 
         $visitRequest = VisitRequest::create([
@@ -67,8 +87,18 @@ class VisitRequestController extends Controller
     #[OA\Get(
         path: '/api/visitRequests',
         description: 'All visit requests',
-        tags: ['Visit Requests']
+        tags: ['Visit Requests'],
+        security : [["bearerAuth" => []]],
+
     )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+
     #[OA\Response(
         response: 200,
         description: 'All visit requests',
@@ -81,12 +111,15 @@ class VisitRequestController extends Controller
                 new OA\Property(
                     property: 'data',
                     type: 'object',
-                    properties: [
-                        new OA\Property(property: 'property_id', type: 'unsignedBigInteger', example: 1),
-                        new OA\Property(property: 'user_id', type: 'unsignedBigInteger', example: 2),
-                        new OA\Property(property: 'requested_at', type: 'dateTime', example: 21-12-2000),
-                        new OA\Property(property: 'status', type: 'string', example: 'pending')
-                    ]
+
+
+                        properties: [
+                            new OA\Property(property: 'property_id', type: 'unsignedBigInteger', example: 1),
+                            new OA\Property(property: 'user_id', type: 'unsignedBigInteger', example: 2),
+                            new OA\Property(property: 'requested_at', type: 'dateTime', example: 21-12-2000),
+                            new OA\Property(property: 'status', type: 'string', example: 'pending')
+                        ]
+
                 )
             ]
         )
@@ -108,10 +141,35 @@ class VisitRequestController extends Controller
      * @return Response
      */
     #[OA\Patch(
-        path: '/api/visitRequests/{id}',
+        path: '/api/visitRequests/{visitRequest}',
         description: 'Update visit request',
-        tags: ['Update Visit Request']
+        tags: ['Update Visit Request'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "visitRequest",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'status', type: 'string', example: 'approved' , enum:['pending' , 'approved' , 'rejected']),
+
+                ]
+            )
+        )
+
     )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+
     #[OA\Response(
         response: 200,
         description: 'Update visit request',
@@ -129,19 +187,18 @@ class VisitRequestController extends Controller
                         new OA\Property(property: 'property_id', type: 'unsignedBigInteger', example: 1),
                         new OA\Property(property: 'user_id', type: 'unsignedBigInteger', example: 2),
                         new OA\Property(property: 'requested_at', type: 'dateTime', example: 21-12-2000),
-                        new OA\Property(property: 'status', type: 'string', example: 'pending')
+                        new OA\Property(property: 'status', type: 'string', example: 'Pending')
                     ]
                 )
             ]
         )
     )]
-    public function update(Request $request, $id)
+    public function update(Request $request, VisitRequest $visitRequest)
     {
         $request->validate([
-            'status' => 'required|string|in:approved,rejected',
+            'status' => 'required|string|in:pending,approved,rejected',
         ]);
 
-        $visitRequest = VisitRequest::findOrFail($id);
         $visitRequest->status = $request->status;
         $visitRequest->save();
 

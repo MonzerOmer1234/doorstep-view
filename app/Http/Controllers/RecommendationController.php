@@ -17,7 +17,21 @@ class RecommendationController extends Controller
     #[OA\Get(
         path: '/api/recommendations/{propertyId}',
         description: 'Get Recommendations',
-        tags: ['All Recommendations']
+        tags: ['All Recommendations'],
+        security : [["bearerAuth" => []]],
+         parameters: [new OA\Parameter(
+            name: "propertyId",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
@@ -53,24 +67,39 @@ class RecommendationController extends Controller
      * @param Request $request
      * @return Response
      */
-    #[OA\Get(
+    #[OA\Post(
         path: '/api/recommendations/{propertyId}/update',
         description: 'Update Recommendations',
-        tags: ['Update Recommendations']
+        tags: ['Update Recommendations'],
+        security : [["bearerAuth" => []]],
+         parameters: [new OA\Parameter(
+            name: "propertyId",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
     )]
     #[OA\Response(
         response: 200,
-        description: 'Update recommendations',
+        description: 'Update a recommendations',
         content: new OA\JsonContent(
             type: 'object',
             properties: [
 
-                new OA\Property(property: 'message', type: 'string', example: 'Recommendations updated successfully'),
+                new OA\Property(property: 'message', type: 'string', example: 'Recommendation is updated successfully'),
 
 
             ]
         )
     )]
+
 
     public function updateRecommendations(Request $request, $propertyId)
     {
@@ -81,6 +110,6 @@ class RecommendationController extends Controller
         Recommendation::where('property_id', $propertyId)->delete();
         Recommendation::generateRecommendations($propertyId);
 
-        return response()->json(['message' => 'Recommendations updated successfully']);
+        return response()->json(['message' => 'Recommendation is updated successfully']);
     }
 }
