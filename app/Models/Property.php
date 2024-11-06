@@ -103,4 +103,22 @@ public function favorites()
         return $this;
     }
 
+    public function feedbacks(){
+        return $this->hasMany(Feedback::class);
+    }
+    public function getTotalFeedback()
+    {
+        return $this->feedbacks()->count();
+    }
+    public function visitRequests()
+    {
+        return $this->hasMany(VisitRequest::class);
+    }
+    public function getTotalVisitRequests()
+    {
+        return $this->visitRequests()->count();
+    }
+
+
+
 }

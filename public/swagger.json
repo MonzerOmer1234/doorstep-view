@@ -7,69 +7,6 @@
     },
     "paths": {
         "/api/agents": {
-            "get": {
-                "tags": [
-                    "All agents"
-                ],
-                "summary": "specifices all the agents in the database",
-                "description": "getting all agents",
-                "operationId": "7d7b3586e36a7c421b37575f0b4e03d5",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Fetching all agents",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "agents are fetched successfully!"
-                                        },
-                                        "agents": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john.doe@example.com"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
             "post": {
                 "tags": [
                     "Store agents"
@@ -123,240 +60,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "agent is created successfully!"
-                                        },
-                                        "agent": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john.doe@example.com"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/agents/{agent}": {
-            "get": {
-                "tags": [
-                    "Details of an agent"
-                ],
-                "summary": "retrieves a specific agent from the database",
-                "description": "Show the details of a single user",
-                "operationId": "3ba4ab77ba165a1faf41b7fc76a5d7b3",
-                "parameters": [
-                    {
-                        "name": "agent",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Show the details of a single user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "agent details are shown successfully!"
-                                        },
-                                        "agent": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john.doe@example.com"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Deleting an Agent"
-                ],
-                "summary": "deletes a specific agent from the database",
-                "description": "Delete a single user",
-                "operationId": "40e6231fd4cf261cea9c21512aaec14c",
-                "parameters": [
-                    {
-                        "name": "agent",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Delete a single user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "agent is deleted successfully!"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "patch": {
-                "tags": [
-                    "Updating agent"
-                ],
-                "summary": "updates a specific agent in the database",
-                "description": "update the details of a single user",
-                "operationId": "99526747a446566bf3e7f96058031f4d",
-                "parameters": [
-                    {
-                        "name": "agent",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "John Doe"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "bio": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "profile_pic": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Update the  details of a single user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "agent details are updated successfully!"
                                         },
                                         "agent": {
                                             "properties": {
@@ -1999,61 +1702,6 @@
                 ]
             }
         },
-        "/api/messages/{id}/read": {
-            "patch": {
-                "tags": [
-                    "Mark Messages as read"
-                ],
-                "description": "Mark messages as read",
-                "operationId": "42e15a6796c70cd699eb810186a73508",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Updating messages as read messages",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "string",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Mark Message as read"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/properties": {
             "get": {
                 "tags": [
@@ -3519,6 +3167,7 @@
                                     "status": {
                                         "type": "string",
                                         "enum": [
+                                            "rescheduled",
                                             "pending",
                                             "approved",
                                             "rejected"
@@ -3583,6 +3232,39 @@
         }
     },
     "components": {
+        "responses": {
+            "200": {
+                "description": "Updating messages as read messages",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "string",
+                                    "example": true
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Mark Message as read"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "Authorization": {
+                "name": "Authorization",
+                "in": "header",
+                "description": "Bearer {token}",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -3595,24 +3277,8 @@
     },
     "tags": [
         {
-            "name": "All agents",
-            "description": "All agents"
-        },
-        {
             "name": "Store agents",
             "description": "Store agents"
-        },
-        {
-            "name": "Details of an agent",
-            "description": "Details of an agent"
-        },
-        {
-            "name": "Updating agent",
-            "description": "Updating agent"
-        },
-        {
-            "name": "Deleting an Agent",
-            "description": "Deleting an Agent"
         },
         {
             "name": "All Amenities",
@@ -3709,10 +3375,6 @@
         {
             "name": "Receive Message",
             "description": "Receive Message"
-        },
-        {
-            "name": "Mark Messages as read",
-            "description": "Mark Messages as read"
         },
         {
             "name": "All properties",

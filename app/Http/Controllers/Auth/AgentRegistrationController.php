@@ -68,7 +68,7 @@ class AgentRegistrationController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:agents|max:255',
-            'phone' => 'nullable|string|max:20|phone',
+            'phone' => 'nullable|string|max:20|phone|unique:agents',
             'bio' => 'nullable|string',
             'profile_picture' => 'nullable|string',
             'password' => ['required', 'confirmed', 'min:8'],

@@ -68,6 +68,8 @@ Route::post('send-fcm-notification', [FcmController::class, 'sendFcmNotification
 
 Route::post('/feedback', [FeedbackController::class, 'submitFeedback'])->middleware('auth:sanctum');
 Route::get('/properties/{propertyId}/feedback', [FeedbackController::class, 'getFeedbackForProperty'])->middleware('auth:sanctum');
+Route::get('/count-property/{propertyId}/feedbacks' , [PropertyController::class , 'countPropertyFeedbacks'])->middleware('auth:sanctum');
+Route::get('/count-property/{propertyId}/visitRequests' , [PropertyController::class , 'countPropertyVisitRequests'])->middleware('auth:sanctum');
 
 // image upload
 Route::post('/upload-image', [ImageController::class, 'store'])->middleware('auth:sanctum'); // For image upload
@@ -96,8 +98,8 @@ Route::get('/search/properties', [SearchController::class, 'search'])->middlewar
 // user profile
 Route::apiResource('/users' , UserProfileController::class)->middleware('auth:sanctum');
 
-// visit request
-Route::apiResource('/visitRequests' , VisitRequestController::class)->middleware('auth:sanctum');
+Route::get('/properties/{propertyId}/visit-request', [VisitRequestController::class, 'create']);
+Route::post('/properties/{propertyId}/visit-request', [VisitRequestController::class, 'store']);
 
 
 

@@ -711,6 +711,27 @@ public function nearByProperties(Request $request)
     ], 200);
 }
 
+public function countPropertyFeedbacks($propertyId)
+{
+    $property = Property::findOrFail($propertyId);
+    $feedbackCount = $property->getTotalFeedback();
+
+    return response()->json([
+        'property_id' => $property->id,
+        'total_feedback' => $feedbackCount
+    ]);
+}
+public function countPropertyVisitRequests($propertyId)
+{
+    $property = Property::findOrFail($propertyId);
+    $totalVisitRequests = $property->getTotalVisitRequests();
+
+    return response()->json([
+        'property_id' => $property->id,
+        'total_visit_requests' => $totalVisitRequests
+    ]);
+}
+
 
 
 }

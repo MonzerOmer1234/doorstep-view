@@ -62,7 +62,7 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'name' => ['required', 'max:255'],
-            'phone_number' => ['required', 'phone'],
+            'phone_number' => ['required', 'phone' , 'unique:users'],
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', 'confirmed', 'min:8'],
             'user_type' => ['required'],
@@ -280,7 +280,7 @@ class AuthController extends Controller
             'password_confirmation' => 'required' // Add this validation
     ]);
 
-       
+
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),

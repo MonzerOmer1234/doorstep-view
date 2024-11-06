@@ -12,6 +12,9 @@ class CreateVisitRequestsTable extends Migration
             $table->unsignedBigInteger('property_id'); // Foreign key to properties table
             $table->unsignedBigInteger('user_id');     // Foreign key to users table
             $table->dateTime('requested_at');
+            $table->string('visitor_name');
+            $table->string('visitor_email');
+            $table->dateTime('visit_date');
             $table->string('status')->default('pending'); // Status can be 'pending', 'approved', 'rejected'
             $table->timestamps();
 
