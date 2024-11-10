@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
-
+use Illuminate\Support\Facades\Log;
 use App\Models\Agent;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -238,11 +237,21 @@ class AgentRegistrationController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        try {
+            // Set a longer timeout just for this operation
+            set_time_limit(120); // 2 minutes
 
-        return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => __('Password reset link sent!')], 200)
-            : response()->json(['message' => __('Failed to send reset link.')], 500);
+            $status = Password::sendResetLink($request->only('email'));
+
+            return $status === Password::RESET_LINK_SENT
+                ? response()->json(['message' => __('Password reset link sent!')], 200)
+                : response()->json(['message' => __('Failed to send reset link.')], 500);
+        } catch (\Exception $e) {
+            Log::error('Password reset email failed: ' . $e->getMessage());
+            return response()->json([
+                'message' => __('Failed to send reset link. Please try again later.')
+            ], 500);
+        }
     }
 
     /**

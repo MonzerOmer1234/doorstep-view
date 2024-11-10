@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use openapi\Attributes as OA;
 
 class UserProfileController extends Controller
@@ -123,7 +124,13 @@ class UserProfileController extends Controller
             'user_type' => 'required'
         ]);
 
-        $user = User::create($fields);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'phone_number' => $request->phone_number,
+            'user_type' => $request->user_type,
+        ]);
 
         return response()->json([
             'status' => 'success',

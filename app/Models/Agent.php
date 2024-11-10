@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use ResetPasswordNotification;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Notifications\ResetPassword;
 
 class Agent extends Model
 {
-    use HasFactory;
+    use HasFactory , Notifiable;
 
     protected $fillable = [
         'name',
@@ -19,7 +20,7 @@ class Agent extends Model
     ];
     public function sendPasswordResetNotification($token)
 {
-    $this->notify(new ResetPasswordNotification($token));
+    $this->notify(new ResetPassword($token));
 }
 
 }

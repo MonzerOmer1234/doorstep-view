@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use OpenApi\Attributes as OA;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -224,11 +225,54 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        try {
+            // Set a longer timeout just for this operation
+            set_time_limit(120);
 
-        return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => __('Password reset link sent!')], 200)
-            : response()->json(['message' => __('Failed to send reset link.')], 500);
+            // Verify mail configuration before attempting to send
+            if (!config('mail.mailers.smtp.host') || !config('mail.mailers.smtp.port')) {
+                Log::error('Mail configuration is incomplete');
+                return response()->json([
+                    'message' => 'Unable to send reset link due to mail configuration issues',
+                    'debug_message' => config('app.debug') ? 'Mail configuration is missing or incomplete' : null
+                ], 500);
+            }
+
+            Log::info('Attempting to send password reset email to: ' . $request->email);
+
+            $status = Password::sendResetLink($request->only('email'));
+
+            if ($status === Password::RESET_LINK_SENT) {
+                Log::info('Password reset link sent successfully to: ' . $request->email);
+                return response()->json(['message' => __('Password reset link sent!')], 200);
+            } else {
+                Log::error('Failed to send reset link. Status: ' . $status);
+                return response()->json([
+                    'message' => 'Unable to send password reset email',
+                    'debug_message' => config('app.debug')
+                        ? 'Please verify your Mailtrap configuration in .env file: MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD'
+                        : null
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $isConnectionError = str_contains($errorMessage, 'Connection could not be established');
+
+            Log::error('Password reset email failed: ' . $errorMessage, [
+                'exception' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to send reset link. Please try again later.',
+                'debug_message' => config('app.debug')
+                    ? ($isConnectionError
+                        ? 'Failed to connect to mail server. Please check your Mailtrap credentials and network connection.'
+                        : $errorMessage)
+                    : null
+            ], 500);
+        }
     }
 
     /**
