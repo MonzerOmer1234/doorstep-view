@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 
 use App\Models\Agent;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Google\Service\Docs\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Password;
 use OpenApi\Attributes as OA;
 
 
@@ -197,6 +199,116 @@ class AgentRegistrationController extends Controller
         return response()->json([
             'message' => 'You are logged out',
         ], 200);
+    }
+      /**
+     * Method to initiate the password reset process.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    #[OA\Post(
+        path: '/api/auth/agents/password/forgot',
+        description: 'forgetting password',
+        tags: ['Forgot Password'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+
+
+                ]
+            )
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Forgotting password',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string', example: 'Paasword reset link sent! | failed to send reset link'),
+
+
+            ]
+        )
+    )]
+    public function forgotPassword(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+            ? response()->json(['message' => __('Password reset link sent!')], 200)
+            : response()->json(['message' => __('Failed to send reset link.')], 500);
+    }
+
+    /**
+     * Method to reset the user's password.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    #[OA\Post(
+        path: '/api/auth/agents/password/reset',
+
+        description: 'reset password',
+        tags: ['Resetting Password'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'mmmmmmmm'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'mmmmmmmm'),
+                    new OA\Property(property: 'token', type: 'string', format: 'password', example: 'mmmmmmxcvveccvvrv'),
+
+
+
+                ]
+            )
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Resetting password',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'message', type: 'string', example: 'Password reset successful! | Failed to reset password.'),
+
+
+
+            ]
+        )
+    )]
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
+            'token' => 'required',
+            'password_confirmation' => 'required' // Add this validation
+    ]);
+
+
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? response()->json(['message' => __('Password reset successful!')], 200)
+            : response()->json(['message' => __('Failed to reset password.')], 500);
     }
 }
 

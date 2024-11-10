@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -67,8 +70,12 @@ public function favorites()
      {
          return $this->hasMany(Message::class);
      }
+     public function sendPasswordResetNotification($token)
+{
+    $this->notify(new ResetPasswordNotification($token));
+}
 
-   
+
 
 }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use ResetPasswordNotification;
 
 class Agent extends Model
 {
@@ -16,4 +17,10 @@ class Agent extends Model
         'bio',
         'profile_picture',
     ];
+    public function sendPasswordResetNotification($token)
+{
+    $this->notify(new ResetPasswordNotification($token));
 }
+
+}
+

@@ -42,6 +42,8 @@ Route::apiResource('/agents', AgentController::class)->middleware('auth:sanctum'
 Route::post('/agents/register', [AgentRegistrationController::class, 'register']);
 Route::post('/agents/login', [AgentRegistrationController::class, 'login']);
 Route::post('/agents/logout', [AgentRegistrationController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/agents/password/forgot', [AgentRegistrationController::class, 'forgotPassword'])->middleware('auth:sanctum');
+Route::post('/agents/password/reset', [AgentRegistrationController::class, 'resetPassword'])->middleware('auth:sanctum');
 
 
 
