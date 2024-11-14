@@ -60,9 +60,24 @@ class FcmController extends Controller
             'fcm_token' => 'required|string',
         ]);
 
-        $request->user()->update(['fcm_token' => $request->fcm_token]);
+        try {
+            $user = \App\Models\User::findOrFail($request->user_id);
+            $user->update(['fcm_token' => $request->fcm_token]);
 
-        return response()->json(['message' => 'Device token updated successfully']);
+            Log::info('Device token updated', [
+                'user_id' => $request->user_id,
+                'token' => substr($request->fcm_token, 0, 10) . '...' // Log only part of the token for security
+            ]);
+
+            return response()->json(['message' => 'Device token updated successfully']);
+        } catch (\Exception $e) {
+            Log::error('Failed to update device token', [
+                'user_id' => $request->user_id,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json(['message' => 'Failed to update device token'], 500);
+        }
     }
 
     // send firebase cloud message notification
@@ -125,22 +140,22 @@ class FcmController extends Controller
         }
 
         // Check Firebase credentials file
-        $credentialsPath = 'json/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json';
-        if (!Storage::exists($credentialsPath)) {
-            Log::error('Firebase credentials file missing at: ' . Storage::path($credentialsPath));
-            return response()->json(['message' => 'Firebase configuration error'], 500);
-        }
+        $credentialsPath = base_path('storage/app/json/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json');
+        if (!file_exists($credentialsPath)) {
+    Log::error('Firebase credentials file missing at: ' . $credentialsPath);
+    return response()->json(['message' => 'Firebase configuration error'], 500);
+      }
 
         try {
             // Initialize Google Client
             $client = new GoogleClient();
-            $client->setAuthConfig(Storage::path($credentialsPath));
+            $client->setAuthConfig($credentialsPath);
             $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
             $client->refreshTokenWithAssertion();
             $accessToken = $client->getAccessToken()['access_token'];
 
             // Prepare notification data
-            $projectId = config('services.fcm.project_id', 'doorstep_view');
+            $projectId = config('services.fcm.project_id', 'doorstep-vujade');
             $data = [
                 'message' => [
                     'token' => $user->fcm_token,
@@ -188,7 +203,7 @@ class FcmController extends Controller
             Log::error('FCM Notification error: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
-
+ 
             return response()->json([
                 'message' => 'Error sending notification',
                 'error' => $e->getMessage()
