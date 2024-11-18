@@ -15,8 +15,10 @@ use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\FcmController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\VisitRequestController;
 use App\Models\VisitRequest;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,8 +34,8 @@ Route::prefix('/auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     // Password Reset
-    Route::post('/password/reset', [AuthController::class, 'resetPassword'])->name('password.reset');
-    Route::post('/password/forgot', [AuthController::class, 'forgotPassword']);
+    Route::post('/password/reset', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
+    Route::post('/password/forgot', [ResetPasswordController::class, 'forgotPassword']);
 });
 
 // Agents

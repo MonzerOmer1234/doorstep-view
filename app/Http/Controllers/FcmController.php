@@ -140,7 +140,7 @@ class FcmController extends Controller
         }
 
         // Check Firebase credentials file
-        $credentialsPath = base_path('storage/app/json/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json');
+  $credentialsPath = storage_path('app/json/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json');
         if (!file_exists($credentialsPath)) {
     Log::error('Firebase credentials file missing at: ' . $credentialsPath);
     return response()->json(['message' => 'Firebase configuration error'], 500);
@@ -148,7 +148,10 @@ class FcmController extends Controller
 
         try {
             // Initialize Google Client
+
+
             $client = new GoogleClient();
+            $client->useApplicationDefaultCredentials();
             $client->setAuthConfig($credentialsPath);
             $client->addScope('https://www.googleapis.com/auth/firebase.messaging');
             $client->refreshTokenWithAssertion();
@@ -203,7 +206,7 @@ class FcmController extends Controller
             Log::error('FCM Notification error: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
- 
+
             return response()->json([
                 'message' => 'Error sending notification',
                 'error' => $e->getMessage()
