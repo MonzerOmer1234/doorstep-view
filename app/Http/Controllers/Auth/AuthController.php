@@ -31,8 +31,8 @@ class AuthController extends Controller
                 properties: [
                     new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
-                    new OA\Property(property: 'password', type: 'string', format: 'email', example: '2345677uu'),
-                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'email', example: '2345677uu'),
+                    new OA\Property(property: 'password', type: 'string', format: 'string', example: '2345677uu'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'string', example: '2345677uu'),
                     new OA\Property(property: 'phone_number', type: 'string', example: '+249961077805'),
                     new OA\Property(property: 'user_type', type: 'string', format: 'email', example: '2'),
                 ]
@@ -187,5 +187,5 @@ class AuthController extends Controller
         ], 200);
     }
 
- 
+
 }

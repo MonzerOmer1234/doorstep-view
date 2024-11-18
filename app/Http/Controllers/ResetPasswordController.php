@@ -43,60 +43,46 @@ class ResetPasswordController extends Controller
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'Paasword reset link sent! | failed to send reset link'),
+                new OA\Property(property: 'message', type: 'string', example: 'Otp is sent successfully'),
+                new OA\Property(property: 'otp_token', type: 'integer', example: 1234),
 
 
             ]
         )
     )]
-    public function forgotPassword(Request $request){
-
-
-
-
+    public function forgotPassword(Request $request)
+{
     $request->validate([
         'email' => 'required|email|exists:users,email',
     ]);
 
-    // Generate a 4-digit OTP
-    $otp = rand(1000, 9999);
-    $email = $request->email;
+    // Find the user by email
+    $user = User::where('email', $request->email)->first();
 
-    // Save OTP and token in password_resets table
-    $token = Hash::make($otp); // Token hashed for security
+    // Generate a 4-digit OTP
+    $otp = random_int(1000, 9999);
+
+    // Hash the OTP for secure storage
+    $hashedOtp = Hash::make($otp);
+
+    // Store OTP in the password_resets table
     DB::table('password_resets')->updateOrInsert(
-        ['email' => $email],
-        ['token' => $token, 'otp' => $otp, 'created_at' => now()]
+        ['email' => $user->email],
+        [
+            'token' => $hashedOtp,
+            'created_at' => now(),
+        ]
     );
 
-    // Inline email content (plain text or HTML)
-    $emailContent = "
-        Hello,
-
-        Your OTP for resetting your password is:
-        $otp
-
-        Please use this OTP to reset your password. It is valid for a limited time.
-
-        Thank you!
-    ";
-
-    try{
-
-        // Send OTP via email
-        set_time_limit(120);
-        Mail::raw($emailContent, function ($message) use ($email) {
-            $message->to($email)->subject('Reset Password OTP');
-        });
-    } catch(Exception $e){
-        Log::error('Email sending failed: ' . $e->getMessage());
-        return response()->json(['message' => 'Failed to send OTP, please try again later.'], 500);
-    }
-
+    // Send the OTP to the user's email
+    Mail::raw("Your OTP is: $otp", function ($message) use ($user) {
+        $message->to($user->email)
+            ->subject('Your OTP for Login');
+    });
 
     return response()->json([
-        'message' => 'OTP sent to your email',
-        'token' => $token, // Return hashed token to be used by the user
+        'message' => 'OTP sent successfully. Use this token to log in.',
+        'otp_token' => $otp, // Return plain text OTP to the user
     ]);
 }
 
@@ -121,7 +107,7 @@ class ResetPasswordController extends Controller
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john.doe@example.com'),
                     new OA\Property(property: 'password', type: 'string', format: 'password', example: 'mmmmmmmm'),
                     new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'mmmmmmmm'),
-                    new OA\Property(property: 'token', type: 'string', format: 'password', example: 'mmmmmmxcvveccvvrv'),
+                    new OA\Property(property: 'otp', type: 'integer', example: 1234), // Ensure items is defined correctly
 
 
 
@@ -135,7 +121,9 @@ class ResetPasswordController extends Controller
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-                new OA\Property(property: 'message', type: 'string', example: 'Password reset successful! | Failed to reset password.'),
+                new OA\Property(property: 'message', type: 'string', example: 'Password is resetted successfully
+                + , you can log in!'),
+                new OA\Property(property: 'token', type: 'string', example: 'xxxxxx'),
 
 
 
@@ -145,27 +133,42 @@ class ResetPasswordController extends Controller
 
  public function resetPassword(Request $request)
 {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-            'otp' => 'required|numeric',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+
+
 
         // Check if OTP matches
-        $resetRequest = DB::table('password_resets')->where('email', $request->email)->first();
 
-        if (!$resetRequest || $resetRequest->otp != $request->otp) {
-            return response()->json(['message' => 'Invalid OTP'], 400);
-        }
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+        'password' => 'required|string|min:8|confirmed',
+        'otp' => 'required|numeric',
+    ]);
 
-        // Update user password
-        $user = User::where('email', $request->email)->first();
-        $user->password = Hash::make($request->password);
-        $user->save();
+    $user = User::where('email', $request->email)->first();
 
-        // Delete reset request
-        DB::table('password_resets')->where('email', $request->email)->delete();
-
-        return response()->json(['message' => 'Password reset successfully']);
+    if (!$user) {
+        return response()->json(['message' => 'Invalid email.'], 401);
     }
+
+    $passwordReset = DB::table('password_resets')
+        ->where('email', $request->email)
+        ->first();
+
+    if (!$passwordReset || !Hash::check($request->otp, $passwordReset->token)) {
+        return response()->json(['message' => 'Invalid OTP.'], 400);
+    }
+
+    // Generate and return a login token
+    $token = $user->createToken('authToken')->plainTextToken;
+
+    // Invalidate OTP
+    DB::table('password_resets')->where('email', $request->email)->delete();
+
+    return response()->json([
+        'message' => 'Login successful.',
+        'token' => $token,
+    ]);
 }
+
+    }
+
