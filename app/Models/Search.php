@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -11,21 +10,19 @@ class Search
 
     public function __construct()
     {
-        // Initialize the query with the Apartment model
+        // Initialize the query with the Property model
         $this->query = Property::query();
     }
 
     public function filter(array $filters): Collection
     {
-        // If no filters are provided, return all apartments
+        // If no filters are provided, return all properties
         if (empty($filters)) {
-            return $this->query->get(); // Return all apartments directly
+            return $this->query->get(); // Return all properties directly
         }
 
         // Apply filters and fetch results
-        $filteredResults = $this->applyFilters($filters)->get();
-
-        return $filteredResults; // Return the filtered results
+        return $this->applyFilters($filters)->get();
     }
 
     protected function applyFilters(array $filters): Builder

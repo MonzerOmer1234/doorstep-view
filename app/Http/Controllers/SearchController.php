@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Search;
 use App\Models\SearchLog;
 use Illuminate\Http\Request;
 use openapi\Attributes as OA;
-
 
 class SearchController extends Controller
 {
@@ -18,7 +16,7 @@ class SearchController extends Controller
         path: '/api/search/properties',
         description: 'Search Properties',
         tags: ['Search Properties'],
-        security : [["bearerAuth" => []]],
+        security: [["bearerAuth" => []]],
     )]
     #[OA\Parameter(
         name: 'Authorization',
@@ -33,20 +31,19 @@ class SearchController extends Controller
         content: new OA\JsonContent(
             type: 'object',
             properties: [
-
                 new OA\Property(
                     property: 'properties',
-                    type: 'object',
-                    properties: [
-                        new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
-                        new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
-                        new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
-                        new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
-
-                    ]
+                    type: 'array',
+                    items: new OA\Schema(
+                        type: 'object',
+                        properties: [
+                            new OA\Property(property: 'location', type: 'string', example: 'Egypt'),
+                            new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                            new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                            new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+                        ]
+                    )
                 )
-
-
             ]
         )
     )]
