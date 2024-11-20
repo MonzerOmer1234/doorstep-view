@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('email')->index();
             $table->string('token');
-            $table->integer('otp');
-    
+            $table->integer('otp')->default(0000);
+
             $table->timestamps();
         });
     }

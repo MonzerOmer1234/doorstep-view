@@ -140,7 +140,7 @@ class FcmController extends Controller
         }
 
         // Check Firebase credentials file
-  $credentialsPath = storage_path('app/json/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json');
+        $credentialsPath = storage_path('app/credentials/doorstep-view-firebase-adminsdk-6f2bi-373e7e8f2b.json');
         if (!file_exists($credentialsPath)) {
     Log::error('Firebase credentials file missing at: ' . $credentialsPath);
     return response()->json(['message' => 'Firebase configuration error'], 500);
