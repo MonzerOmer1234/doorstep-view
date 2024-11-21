@@ -19,8 +19,9 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '123-456-7890',
             'user_type' => 'regular',
         ]);
-        $this->call(NeighborhoodSeeder::class);
-        $this->call(ApartmentSeeder::class);
+        $this->call(PropertiesTableSeeder::class);
+        $this->call(AmenitySeeder::class);
+        // $this->call(ApartmentSeeder::class);
 
         // User::factory()->create([
         //     'name' => 'Test User',
