@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('amenities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('icon');
+            
             $table->string('category')->default('school'); // e.g., school, supermarket, hospital
             $table->string('address')->nullable();
-            $table->decimal('latitude', 10, 7)->default(10); // Geographical coordinates
+            $table->decimal('latitude', 10, 7)->default(10);
             $table->decimal('longitude', 10, 7)->default(10); // Geographical coordinates
             $table->timestamps();
         });

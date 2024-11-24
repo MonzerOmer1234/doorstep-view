@@ -44,7 +44,7 @@ public function favorites()
 
     public function amenities()
     {
-        return $this->belongsToMany(Amenity::class , 'property_aminities');
+        return $this->belongsToMany(Amenity::class , 'property_amenities');
     }
 
     // Custom query scopes

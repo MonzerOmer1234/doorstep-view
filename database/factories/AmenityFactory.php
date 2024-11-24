@@ -13,9 +13,10 @@ class AmenityFactory extends Factory
     {
         return [
             'name' => $this->faker->company,
-            'icon' => $this->faker->text(10),
-            'category' => $this->faker->randomElement(['school', 'park', 'hospital', 'shopping mall', 'bus stop', 'restaurant']),
-            'latitude' => $this->faker->latitude,
+            
+            'address' => $this->faker->address,
+            'category' => $this->faker->randomElement(['school', 'park', 'hospital', 'shopping mall', 'restaurant']),
+           'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
         ];
     }

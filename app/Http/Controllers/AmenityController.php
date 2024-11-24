@@ -6,6 +6,8 @@ use App\Models\Amenity;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -261,7 +263,7 @@ class AmenityController extends Controller
             required: true,
             schema: new OA\Schema(type: "integer")
         )],
-      
+
     )]
     #[OA\Parameter(
         name: 'Authorization',
@@ -300,27 +302,40 @@ class AmenityController extends Controller
         )
     )]
     public function getNearbyAmenities($propertyId, Request $request)
-    {
-        // Find the property by ID
-        $property = Property::findOrFail($propertyId);
+{
+    // Find the property by ID
+    $property = Property::findOrFail($propertyId);
 
-        // Set the distance threshold (in kilometers or miles)
-        $distance = $request->input('distance', 5); // Default to 5 km
+    // Set the distance threshold (in kilometers or miles)
+    $distance = $request->input('distance', 14000); // Default to 5 km
 
-        // Query to find nearby amenities within the distance range
-        $amenities = Amenity::selectRaw("
-            id, name, address, category, latitude, longitude,
-            (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance
-        ", [$property->latitude, $property->longitude, $property->latitude])
-            ->having('distance', '<=', $distance)
-            ->orderBy('distance', 'asc')
-            ->get();
+    // Query to find nearby amenities within the distance range
+    $amenitiesQuery = Amenity::selectRaw("
+    id, name, address, category, latitude, longitude,
+    (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance
+", [$property->latitude, $property->longitude, $property->latitude])
+->having('distance', '<=', $distance)
+->orderBy('distance', 'asc');
 
-        return response()->json([
-            'property' => $property,
-            'amenities' => $amenities
-        ]);
-    }
+// Log the SQL query with parameters
+$sql = $amenitiesQuery->toSql();
+Log::info('Generated SQL Query: ' . $sql);
+
+// Check if the query is being executed properly
+$boundParams = $amenitiesQuery->getBindings();
+Log::info('SQL Query Parameters: ', $boundParams);
+
+// Execute the query to get results
+$amenities = $amenitiesQuery->get();
+
+
+
+    return response()->json([
+        'property' => $property,
+        'amenities' => $amenities
+    ]);
 }
+    }
+
 
 
