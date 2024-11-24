@@ -123,7 +123,7 @@ class ResetPasswordController extends Controller
             properties: [
                 new OA\Property(property: 'message', type: 'string', example: 'Password is resetted successfully
                 + , you can log in!'),
-                new OA\Property(property: 'token', type: 'string', example: 'xxxxxx'),
+                new OA\Property(property: 'otp', type: 'string', example: 'xxxxxx'),
 
 
 
@@ -158,6 +158,10 @@ class ResetPasswordController extends Controller
         return response()->json(['message' => 'Invalid OTP.'], 400);
     }
 
+
+     // Update the user's password
+     $user->password = Hash::make($request->password);
+     $user->save();
     // Generate and return a login token
     $token = $user->createToken('authToken')->plainTextToken;
 
