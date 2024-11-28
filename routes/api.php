@@ -102,9 +102,11 @@ Route::get('/search/properties', [SearchController::class, 'search'])->middlewar
 // user profile
 Route::apiResource('/users' , UserProfileController::class)->middleware('auth:sanctum');
 
-Route::get('/properties/{propertyId}/visit-request', [VisitRequestController::class, 'create']);
-Route::post('/properties/{propertyId}/visit-request', [VisitRequestController::class, 'store']);
 
+// Visit Requests Routes
+Route::get('visit-requests', [VisitRequestController::class, 'list'])->middleware('auth:sanctum'); // List all visit requests for authenticated user
+Route::post('visit-requests', [VisitRequestController::class, 'store'])->middleware('auth:sanctum'); // Create a new visit request
+Route::delete('visit-requests/{id}', [VisitRequestController::class, 'destroy'])->middleware('auth:sanctum'); // Delete a specific visit request
 
 
 
