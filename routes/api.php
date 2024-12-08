@@ -89,7 +89,7 @@ Route::apiResource('/properties', PropertyController::class)->middleware('auth:s
 
 Route::put('/properties/attach-amenity/{propertyId}/{amenityId}' , [PropertyController::class , 'attachAmenity'])->middleware('auth:sanctum');
 Route::delete('/properties/detach-amenity/{propertyId}/{amenityId}' , [PropertyController::class , 'detachAmenity'])->middleware('auth:sanctum');
-Route::get('/nearby-properties', [PropertyController::class, 'nearByProperties'])->middleware('auth:sanctum');
+Route::get('/properties/nearby/{latitude}/{longitude}/{radius?}', [PropertyController::class, 'nearbyProperties'])->middleware('auth:sanctum');
 
 // Recommendation System
 Route::get('/recommendations/{propertyId}', [RecommendationController::class, 'fetchRecommendations'])->middleware('auth:sanctum');

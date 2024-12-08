@@ -112,8 +112,12 @@ class PropertyController extends Controller
                         new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
                         new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
                         new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+                        ]
 
-                    ]
+
+
+
+
                 )
             ]
         )
@@ -263,12 +267,13 @@ class PropertyController extends Controller
                     property: 'property',
                     type: 'object',
                     properties: [
-                        new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
-                        new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
-                        new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
-                        new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
+                            new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                            new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                            new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                            new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
 
-                    ]
+                        ]
+
                 )
             ]
         )
@@ -526,76 +531,7 @@ class PropertyController extends Controller
  * @param int $radius Search radius in kilometers
  * @return \Illuminate\Database\Eloquent\Collection
  */
-#[OA\Get(
-    path: '/api/properties/nearby/{userLat}/{userLng}/{radius?}',
-    description: 'Get properties within specified radius',
-    tags: ['Nearby Properties'],
-    security: [["bearerAuth" => []]],
-    parameters: [
-        new OA\Parameter(
-            name: "userLat",
-            in: "path",
-            required: true,
-            description: "User's latitude",
-            schema: new OA\Schema(type: "number", format: "float")
-        ),
-        new OA\Parameter(
-            name: "userLng",
-            in: "path",
-            required: true,
-            description: "User's latitude",
-            schema: new OA\Schema(type: "number", format: "float")
-        ),
-        new OA\Parameter(
-            name: "userLng",
-            in: "path",
-            required: true,
-            description: "User's longitude",
-            schema: new OA\Schema(type: "number", format: "float")
-        ),
-        new OA\Parameter(
-            name: "radius",
-            in: "path",
-            required: false,
-            description: "Search radius in kilometers",
-            schema: new OA\Schema(type: "integer", default: 5)
-        )
-    ]
-    )
-]
-    #[OA\Parameter(
-        name: 'Authorization',
-        in: 'header',
-        description: 'Bearer {token}',
-        required: true,
-        schema: new OA\Schema(type: 'string')
-    )]
-    #[OA\Response(
-        response: 200,
-        description: 'List of nearby properties',
-        content: new OA\JsonContent(
-            type: 'array',
-            items: new OA\Items(
-                properties: [
-                    new OA\Property(property: 'id', type: 'integer'),
-                    new OA\Property(property: 'title', type: 'string'),
-                    new OA\Property(property: 'location', type: 'string'),
-                    new OA\Property(property: 'latitude', type: 'number', format: 'float'),
-                    new OA\Property(property: 'longitude', type: 'number', format: 'float'),
-                    new OA\Property(property: 'distance', type: 'number', format: 'float', description: 'Distance in kilometers')
-                ]
-            )
-        )
-    )]
-    #[OA\Response(
-        response: 500,
-        description: 'Server error',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'error', type: 'string')
-            ]
-        )
-    )]
+
     public function getNearByProperties($userLat, $userLng, $radius = 5)
     {
         try{
@@ -627,7 +563,7 @@ class PropertyController extends Controller
  * @return Response
 */
 #[OA\Get(
-    path: '/api/nearby-properties',
+    path: '/api/properties/nearby/{latitude}/{longitude}/{radius?}',
     description: 'Get nearby properties based on coordinates',
     tags: ['Nearby Properties'],
     security: [["bearerAuth" => []]],
@@ -661,28 +597,35 @@ class PropertyController extends Controller
     response: 200,
     description: 'Successful response',
     content: new OA\JsonContent(
+        type: 'object',
         properties: [
             new OA\Property(property: 'message', type: 'string'),
+
             new OA\Property(
-                property: 'properties',
-                type: 'array',
-                items: new OA\Items(
-                    properties: [
-                        new OA\Property(property: 'id', type: 'integer'),
-                        new OA\Property(property: 'location', type: 'string'),
-                        new OA\Property(property: 'property_type', type: 'string'),
-                        new OA\Property(property: 'latitude', type: 'number'),
-                        new OA\Property(property: 'longitude', type: 'number'),
-                        new OA\Property(property: 'distance', type: 'number')
-                    ]
+                property: 'data',
+                type: 'object',
+                properties: [
+                    new OA\Property(
+                        property: 'properties',
+                        type: 'object',
+                        properties: [
+                            new OA\Property(property: 'id', type: 'integer'),
+                            new OA\Property(property: 'location', type: 'string'),
+                            new OA\Property(property: 'property_type', type: 'string'),
+                            new OA\Property(property: 'latitude', type: 'number'),
+                            new OA\Property(property: 'longitude', type: 'number'),
+                            new OA\Property(property: 'distance', type: 'number')
+                        ]
+
+                    )
+                ]
                 )
-            )
+            
         ]
     )
-    )]
+)]
 
-
-public function nearByProperties(Request $request)
+public function nearbyProperties(Request $request)
 {
     $validator = Validator::make($request->all(), [
         'latitude' => 'required|numeric|between:-90,90',
@@ -695,8 +638,6 @@ public function nearByProperties(Request $request)
     $userLat = $request->input('latitude');
     $userLng = $request->input('longitude');
     $properties = $this->getNearByProperties($userLat, $userLng);
-
-
 
     if ($properties->isEmpty()) {
         return response()->json([
