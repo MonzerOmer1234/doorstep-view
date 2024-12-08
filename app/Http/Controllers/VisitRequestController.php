@@ -2,56 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Property;
 use App\Models\VisitRequest;
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 class VisitRequestController extends Controller
 {
     /**
-     * Show the form to request a visit to a specified property.
+     * List all visit requests for the authenticated user.
      *
-     * @param  int  $propertyId
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create($propertyId)
+    public function list()
     {
-        $property = Property::findOrFail($propertyId);
+        $visitRequests = VisitRequest::where('user_id', auth()->id())
+            ->with('property') 
+            ->get();
 
         return response()->json([
             'status' => 'success',
-            'property' => $property,
+            'message' => 'Visit requests fetched successfully',
+            'visit_requests' => $visitRequests
         ]);
     }
 
     /**
-     * Store a new visit request for a specified property.
+     * Store a new visit request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $propertyId
-     * @return \Illuminate\Http\RedirectResponse
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, $propertyId)
+    public function store(Request $request)
     {
         $request->validate([
+            'property_id' => 'required|exists:properties,id',
             'visitor_name' => 'required|string|max:255',
             'visitor_email' => 'required|email',
             'visit_date' => 'required|date|after:today',
         ]);
 
-        $property = Property::findOrFail($propertyId);
-
         $visitRequest = VisitRequest::create([
-            'property_id' => $property->id,
+            'user_id' => auth()->id(),
+            'property_id' => $request->property_id,
             'visitor_name' => $request->visitor_name,
             'visitor_email' => $request->visitor_email,
             'visit_date' => $request->visit_date,
+            'requested_at' => now(), // Automatically set the current timestamp
         ]);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'The visit request is stored successfully',
-            'visit_request' => $visitRequest,
+            'message' => 'Visit request created successfully',
+            'visit_request' => $visitRequest
+        ], 201);
+    }
+
+    /**
+     * Delete a specific visit request.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        $visitRequest = VisitRequest::findOrFail($id);
+
+        if ($visitRequest->user_id !== auth()->id()) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $visitRequest->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Visit request deleted successfully'
         ]);
     }
 }
