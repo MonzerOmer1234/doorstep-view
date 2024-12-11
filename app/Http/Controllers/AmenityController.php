@@ -307,7 +307,7 @@ class AmenityController extends Controller
     $property = Property::findOrFail($propertyId);
 
     // Set the distance threshold (in kilometers or miles)
-    $distance = $request->input('distance', 14000); // Default to 5 km
+    $distance = $request->input('distance', 5); // Default to 5 km
 
     // Query to find nearby amenities within the distance range
     $amenitiesQuery = Amenity::selectRaw("

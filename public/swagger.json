@@ -735,6 +735,111 @@
                 ]
             }
         },
+        "/api/auth/agents/password/forgot": {
+            "post": {
+                "tags": [
+                    "Forgot Password"
+                ],
+                "summary": "Method to initiate the password reset process.",
+                "description": "forgetting password",
+                "operationId": "e48abf76adbc405829a9d964fd117f3c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Forgotting password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Paasword reset link sent! | failed to send reset link"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/agents/password/reset": {
+            "post": {
+                "tags": [
+                    "Resetting Password"
+                ],
+                "summary": "Method to reset the user's password.",
+                "description": "reset password",
+                "operationId": "aa0561017a5081b82072af0eec49372c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmmm"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmmm"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmxcvveccvvrv"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resetting password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successful! | Failed to reset password."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/auth/register": {
             "post": {
                 "tags": [
@@ -760,12 +865,12 @@
                                     },
                                     "password": {
                                         "type": "string",
-                                        "format": "email",
+                                        "format": "string",
                                         "example": "2345677uu"
                                     },
                                     "password_confirmation": {
                                         "type": "string",
-                                        "format": "email",
+                                        "format": "string",
                                         "example": "2345677uu"
                                     },
                                     "phone_number": {
@@ -934,111 +1039,6 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/api/auth/password/forgot": {
-            "post": {
-                "tags": [
-                    "Forgot Password"
-                ],
-                "summary": "Method to initiate the password reset process.",
-                "description": "forgetting password",
-                "operationId": "d9cc70f609b0bb19f5707717a10f266c",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Forgotting password",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Paasword reset link sent! | failed to send reset link"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/auth/password/reset": {
-            "post": {
-                "tags": [
-                    "Resetting Password"
-                ],
-                "summary": "Method to reset the user's password.",
-                "description": "reset password",
-                "operationId": "aee8cc4d69b9a7e99c0472ebcbf0d2aa",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "mmmmmmmm"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "mmmmmmmm"
-                                    },
-                                    "token": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "mmmmmmxcvveccvvrv"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Resetting password",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Password reset successful! | Failed to reset password."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
         "/api/favorites": {
@@ -2287,133 +2287,13 @@
                 ]
             }
         },
-        "/api/properties/nearby/{userLat}/{userLng}/{radius?}": {
-            "get": {
-                "tags": [
-                    "Nearby Properties"
-                ],
-                "summary": "Get properties within a specified radius from given coordinates",
-                "description": "Get properties within specified radius",
-                "operationId": "9fd88cd46dad1d9c91b2814643308d46",
-                "parameters": [
-                    {
-                        "name": "userLat",
-                        "in": "path",
-                        "description": "User's latitude",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "userLng",
-                        "in": "path",
-                        "description": "User's latitude",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "userLng",
-                        "in": "path",
-                        "description": "User's longitude",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "float"
-                        }
-                    },
-                    {
-                        "name": "radius",
-                        "in": "path",
-                        "description": "Search radius in kilometers",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 5
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of nearby properties",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "integer"
-                                            },
-                                            "title": {
-                                                "type": "string"
-                                            },
-                                            "location": {
-                                                "type": "string"
-                                            },
-                                            "latitude": {
-                                                "type": "number",
-                                                "format": "float"
-                                            },
-                                            "longitude": {
-                                                "type": "number",
-                                                "format": "float"
-                                            },
-                                            "distance": {
-                                                "description": "Distance in kilometers",
-                                                "type": "number",
-                                                "format": "float"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/nearby-properties": {
+        "/api/properties/nearby/{latitude}/{longitude}/{radius?}": {
             "get": {
                 "tags": [
                     "Nearby Properties"
                 ],
                 "description": "Get nearby properties based on coordinates",
-                "operationId": "3e7eec4d9f72c04d8f280567c7a5b8da",
+                "operationId": "0a65204366b31bbd2b53f485b31ce8bf",
                 "parameters": [
                     {
                         "name": "latitude",
@@ -2455,31 +2335,33 @@
                                         "message": {
                                             "type": "string"
                                         },
-                                        "properties": {
-                                            "type": "array",
-                                            "items": {
+                                        "data": {
+                                            "properties": {
                                                 "properties": {
-                                                    "id": {
-                                                        "type": "integer"
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "location": {
+                                                            "type": "string"
+                                                        },
+                                                        "property_type": {
+                                                            "type": "string"
+                                                        },
+                                                        "latitude": {
+                                                            "type": "number"
+                                                        },
+                                                        "longitude": {
+                                                            "type": "number"
+                                                        },
+                                                        "distance": {
+                                                            "type": "number"
+                                                        }
                                                     },
-                                                    "location": {
-                                                        "type": "string"
-                                                    },
-                                                    "property_type": {
-                                                        "type": "string"
-                                                    },
-                                                    "latitude": {
-                                                        "type": "number"
-                                                    },
-                                                    "longitude": {
-                                                        "type": "number"
-                                                    },
-                                                    "distance": {
-                                                        "type": "number"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2597,6 +2479,118 @@
                 ]
             }
         },
+        "/api/password/forgot": {
+            "post": {
+                "tags": [
+                    "Forgot Password"
+                ],
+                "summary": "Method to initiate the password reset process.",
+                "description": "forgetting password",
+                "operationId": "2fd9839f407f23e1b965578965e35621",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Forgotting password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Otp is sent successfully"
+                                        },
+                                        "otp_token": {
+                                            "type": "integer",
+                                            "example": 1234
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/password/reset": {
+            "post": {
+                "tags": [
+                    "Resetting Password"
+                ],
+                "summary": "Method to reset the user's password.",
+                "description": "reset password",
+                "operationId": "501ab51506bc9015adaaede6f43037fe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmmm"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmmm"
+                                    },
+                                    "otp": {
+                                        "type": "integer",
+                                        "example": 1234
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resetting password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password is resetted successfully\n                + , you can log in!"
+                                        },
+                                        "otp": {
+                                            "type": "string",
+                                            "example": "xxxxxx"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/search/properties": {
             "get": {
                 "tags": [
@@ -2623,25 +2617,28 @@
                                 "schema": {
                                     "properties": {
                                         "properties": {
-                                            "properties": {
-                                                "location": {
-                                                    "type": "string",
-                                                    "example": "Egypt"
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "location": {
+                                                        "type": "string",
+                                                        "example": "Egypt"
+                                                    },
+                                                    "property_type": {
+                                                        "type": "string",
+                                                        "example": "villa"
+                                                    },
+                                                    "bedrooms": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "bathrooms": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    }
                                                 },
-                                                "property_type": {
-                                                    "type": "string",
-                                                    "example": "villa"
-                                                },
-                                                "bedrooms": {
-                                                    "type": "integer",
-                                                    "example": 3
-                                                },
-                                                "bathrooms": {
-                                                    "type": "integer",
-                                                    "example": 10
-                                                }
-                                            },
-                                            "type": "object"
+                                                "type": "object"
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -2981,254 +2978,6 @@
                     }
                 ]
             }
-        },
-        "/api/visitRequests": {
-            "get": {
-                "tags": [
-                    "Visit Requests"
-                ],
-                "description": "All visit requests",
-                "operationId": "c4dcea50b63ab8c52fe17b20a026a4ba",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "All visit requests",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "property_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 1
-                                                },
-                                                "user_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 2
-                                                },
-                                                "requested_at": {
-                                                    "type": "dateTime",
-                                                    "example": -1991
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "example": "pending"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Create a visist request"
-                ],
-                "description": "create a visit request",
-                "operationId": "541f009c7808f1e3b98573eb28c11744",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "property_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "requested_at": {
-                                        "type": "dateTime",
-                                        "example": "2024-10-23 17:47:12"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Create a visist request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Visit request created successfully"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "property_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 1
-                                                },
-                                                "user_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 2
-                                                },
-                                                "requested_at": {
-                                                    "type": "dateTime",
-                                                    "example": -1991
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "example": "pending"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/visitRequests/{visitRequest}": {
-            "patch": {
-                "tags": [
-                    "Update Visit Request"
-                ],
-                "description": "Update visit request",
-                "operationId": "fd3e64e5445a08dd0c8071f07f09a88f",
-                "parameters": [
-                    {
-                        "name": "visitRequest",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "status": {
-                                        "type": "string",
-                                        "enum": [
-                                            "rescheduled",
-                                            "pending",
-                                            "approved",
-                                            "rejected"
-                                        ],
-                                        "example": "approved"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Update visit request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Visit request status updated successfully"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "property_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 1
-                                                },
-                                                "user_id": {
-                                                    "type": "unsignedBigInteger",
-                                                    "example": 2
-                                                },
-                                                "requested_at": {
-                                                    "type": "dateTime",
-                                                    "example": -1991
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "example": "Pending"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -3317,6 +3066,14 @@
             "description": "Agent logout"
         },
         {
+            "name": "Forgot Password",
+            "description": "Forgot Password"
+        },
+        {
+            "name": "Resetting Password",
+            "description": "Resetting Password"
+        },
+        {
             "name": "register",
             "description": "register"
         },
@@ -3327,14 +3084,6 @@
         {
             "name": "logout",
             "description": "logout"
-        },
-        {
-            "name": "Forgot Password",
-            "description": "Forgot Password"
-        },
-        {
-            "name": "Resetting Password",
-            "description": "Resetting Password"
         },
         {
             "name": "Create Favourite",
@@ -3439,18 +3188,6 @@
         {
             "name": "Delete a user",
             "description": "Delete a user"
-        },
-        {
-            "name": "Create a visist request",
-            "description": "Create a visist request"
-        },
-        {
-            "name": "Visit Requests",
-            "description": "Visit Requests"
-        },
-        {
-            "name": "Update Visit Request",
-            "description": "Update Visit Request"
         }
     ]
 }

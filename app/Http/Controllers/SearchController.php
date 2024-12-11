@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Search;
 use App\Models\SearchLog;
 use Illuminate\Http\Request;
-use openapi\Attributes as OA;
+use OpenApi\Attributes as OA;
 
 class SearchController extends Controller
 {
@@ -34,7 +34,7 @@ class SearchController extends Controller
                 new OA\Property(
                     property: 'properties',
                     type: 'array',
-                    items: new OA\Schema(
+                    items: new OA\Items(
                         type: 'object',
                         properties: [
                             new OA\Property(property: 'location', type: 'string', example: 'Egypt'),

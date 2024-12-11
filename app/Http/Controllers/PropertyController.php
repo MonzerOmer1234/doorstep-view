@@ -538,7 +538,7 @@ class PropertyController extends Controller
 
             $properties = DB::table('properties')
             ->select('*', DB::raw("
-                ( 6371 * acos( cos( $userLat )
+                ( 6371 * acos( cos( radians($userLat) )
                 * cos( radians( latitude ) )
                 * cos( radians( longitude ) - radians($userLng) )
                 + sin( radians($userLat) )
@@ -620,7 +620,7 @@ class PropertyController extends Controller
                     )
                 ]
                 )
-            
+
         ]
     )
 )]
