@@ -23,6 +23,41 @@ class AmenityController extends Controller
         tags: ['All Amenities'],
         security : [["bearerAuth" => []]],
     )]
+    // #[OA\Parameter(
+    //     name: 'Authorization',
+    //     in: 'header',
+    //     description: 'Bearer {token}',
+    //     required: true,
+    //     schema: new OA\Schema(type: 'string')
+    // )]
+    // #[OA\Response(
+    //     response: 200,
+    //     description: 'Fetching all amenities',
+    //     content: new OA\JsonContent(
+    //         type: 'object',
+    //         properties: [
+    //             new OA\Property(property: 'status', type: 'string', example: 'success'),
+    //             new OA\Property(property: 'message', type: 'string', example: 'amenities are fetched successfully!'),
+
+    //             new OA\Property(
+    //                 property: 'amenities',
+    //                 type: 'object',
+    //                 properties: [
+    //                     new OA\Property(property: 'name', type: 'integer', example:  'wifi'),
+    //                     new OA\Property(property: 'icon', type: 'string', example: 'icon'),
+    //                     new OA\Property(property: 'category', type: 'string', example: 'category 1')
+    //                 ]
+    //             )
+    //         ]
+    //     )
+    // )]
+
+    #[OA\Get(
+        path: '/api/agents/amenities',
+        description: 'getting all amenities',
+        tags: ['All Amenities'],
+        security : [["bearerAuth" => []]],
+    )]
     #[OA\Parameter(
         name: 'Authorization',
         in: 'header',
@@ -67,6 +102,28 @@ class AmenityController extends Controller
      * @param Request $request
      * @return Response
      */
+    #[OA\Post(
+        path: '/api/agents/amenities',
+        description: 'craete an amenity',
+        tags: ['Create an amenity'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'icon', type: 'string', format: 'email', example: 'icon 1')
+                ]
+            )
+        )
+        )]
+        #[OA\Parameter(
+            name: 'Authorization',
+            in: 'header',
+            description: 'Bearer {token}',
+            required: true,
+            schema: new OA\Schema(type: 'string')
+        )]
     #[OA\Post(
         path: '/api/amenities',
         description: 'craete an amenity',
@@ -134,7 +191,7 @@ class AmenityController extends Controller
      * @return Response
      */
     #[OA\Put(
-        path: '/api/amenities/{amenity}',
+        path: '/api/amenities/{id}',
         description: 'Update amenity',
         tags: ['Update amenity'],
         security : [["bearerAuth" => []]],
@@ -206,7 +263,7 @@ class AmenityController extends Controller
      * @return Response
      */
     #[OA\Delete(
-        path: '/api/amenities/{amenity}',
+        path: '/api/amenities/{id}',
         description: 'Deleting amenity',
         tags: ['Delete amenity'],
         security : [["bearerAuth" => []]],

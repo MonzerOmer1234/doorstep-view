@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Agent;
 
 use App\Models\Agent;
+use App\Http\Controllers\Controller;
 use Google\Service\Dataflow\Parameter;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
-
 class AgentController extends Controller
-
-
-
 {
 
 

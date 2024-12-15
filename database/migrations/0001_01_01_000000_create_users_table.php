@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number');
             $table->string('user_type');
+            $table->enum('user_role' , ['client' , 'agent']);
             $table->rememberToken();
             $table->timestamps();
         });

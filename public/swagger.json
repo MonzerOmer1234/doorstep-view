@@ -13,7 +13,7 @@
                 ],
                 "summary": "creates a new agent in the database",
                 "description": "creating an agent",
-                "operationId": "30b8068ffaa6f8a847059c29d17ad684",
+                "operationId": "73aeea5980dfb65419a2d1a01e323aa9",
                 "parameters": [
                     {
                         "name": "Authorization",
@@ -92,6 +92,311 @@
                 ]
             }
         },
+        "/api/agents/register": {
+            "post": {
+                "tags": [
+                    "Agent Registeration"
+                ],
+                "summary": "Registers a new agent",
+                "description": "Registers a new agent",
+                "operationId": "d2710c051c4ffe6d96d3742d510fbe69",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "2345677uu"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "2345677uu"
+                                    },
+                                    "phone_number": {
+                                        "type": "string",
+                                        "example": "+249961077805"
+                                    },
+                                    "user_type": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Agent is registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Agent created successfully"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john.doe@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/agents/login": {
+            "post": {
+                "tags": [
+                    "Agent login"
+                ],
+                "summary": "Method that handles the login of an agent.",
+                "description": "logins an existing agent",
+                "operationId": "4378396cd418e6eb83d851c57459f1bb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "2345677uu"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Agent is logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "adcxzvbhfredfgh"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john.doe@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/agents/logout": {
+            "post": {
+                "tags": [
+                    "Agent logout"
+                ],
+                "summary": "Method that handles the logout of an agent.",
+                "description": "logout an existing agent",
+                "operationId": "f1ac6be6e6ff2bd0e91b8497c52c043c",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Agent is logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You are logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/agents/password/forgot": {
+            "post": {
+                "tags": [
+                    "Forgot Password"
+                ],
+                "summary": "Method to initiate the password reset process.",
+                "description": "forgetting password",
+                "operationId": "458ae04b826be39267be27eac3513feb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Forgotting password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Paasword reset link sent! | failed to send reset link"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/agents/password/reset": {
+            "post": {
+                "tags": [
+                    "Resetting Password"
+                ],
+                "summary": "Method to reset the user's password.",
+                "description": "reset password",
+                "operationId": "714ef81466baf77ad1f65d03954acfa4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmmm"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmmm"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "mmmmmmxcvveccvvrv"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resetting password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successful! | Failed to reset password."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/amenities": {
             "get": {
                 "tags": [
@@ -160,10 +465,18 @@
                 "tags": [
                     "Create an amenity"
                 ],
-                "summary": "Store a newly created resource in storage.",
                 "description": "craete an amenity",
                 "operationId": "0554bae506a572032c10e0df028b92c1",
                 "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "Authorization",
                         "in": "header",
@@ -241,14 +554,171 @@
                 ]
             }
         },
-        "/api/amenities/{amenity}": {
+        "/api/agents/amenities": {
+            "get": {
+                "tags": [
+                    "All Amenities"
+                ],
+                "description": "getting all amenities",
+                "operationId": "f51f48e8616c82969f270f37355b18a5",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetching all amenities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "amenities are fetched successfully!"
+                                        },
+                                        "amenities": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "integer",
+                                                    "example": "wifi"
+                                                },
+                                                "icon": {
+                                                    "type": "string",
+                                                    "example": "icon"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "category 1"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Create an amenity"
+                ],
+                "summary": "Store a newly created resource in storage.",
+                "description": "craete an amenity",
+                "operationId": "008187e61b39ac82fca39e276ceb6e2a",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "icon 1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "create an amenity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "the amenity is created successfully!"
+                                        },
+                                        "agents": {
+                                            "properties": {
+                                                "icon": {
+                                                    "type": "integer",
+                                                    "example": "icon"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "wifi"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "cateory 2"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/amenities/{id}": {
             "put": {
                 "tags": [
                     "Update amenity"
                 ],
                 "summary": "Update the specified resource in storage.",
                 "description": "Update amenity",
-                "operationId": "703a9127558e029b6ce36cd3c484eb2a",
+                "operationId": "29870ba8693916f29f2d894f68c89306",
                 "parameters": [
                     {
                         "name": "amenity",
@@ -340,7 +810,7 @@
                 ],
                 "summary": "Remove the specified resource from storage.",
                 "description": "Deleting amenity",
-                "operationId": "416c4ac01a0c6dfd362e5bc35e9f4963",
+                "operationId": "1b5893cfbd928628541adbe9f4f7dc6a",
                 "parameters": [
                     {
                         "name": "amenity",
@@ -533,311 +1003,6 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/api/agents/register": {
-            "post": {
-                "tags": [
-                    "Agent Registeration"
-                ],
-                "summary": "Registers a new agent",
-                "description": "Registers a new agent",
-                "operationId": "76e86d0ddf98d6a80f6ff10842f8e209",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "John Doe"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "2345677uu"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "2345677uu"
-                                    },
-                                    "phone_number": {
-                                        "type": "string",
-                                        "example": "+249961077805"
-                                    },
-                                    "user_type": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "2"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Agent is registered successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Agent created successfully"
-                                        },
-                                        "user": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john.doe@example.com"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/agents/login": {
-            "post": {
-                "tags": [
-                    "Agent login"
-                ],
-                "summary": "Method that handles the login of an agent.",
-                "description": "logins an existing agent",
-                "operationId": "87dccb72af5bd4b5f2fdd01ca1a4f53b",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "2345677uu"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Agent is logged in successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "token": {
-                                            "type": "string",
-                                            "example": "adcxzvbhfredfgh"
-                                        },
-                                        "user": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john.doe@example.com"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/agents/logout": {
-            "post": {
-                "tags": [
-                    "Agent logout"
-                ],
-                "summary": "Method that handles the logout of an agent.",
-                "description": "logout an existing agent",
-                "operationId": "b514245f43eea343e95e7d4c627030a9",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Bearer {token}",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Agent is logged out successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "You are logged out successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/auth/agents/password/forgot": {
-            "post": {
-                "tags": [
-                    "Forgot Password"
-                ],
-                "summary": "Method to initiate the password reset process.",
-                "description": "forgetting password",
-                "operationId": "e48abf76adbc405829a9d964fd117f3c",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Forgotting password",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Paasword reset link sent! | failed to send reset link"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/auth/agents/password/reset": {
-            "post": {
-                "tags": [
-                    "Resetting Password"
-                ],
-                "summary": "Method to reset the user's password.",
-                "description": "reset password",
-                "operationId": "aa0561017a5081b82072af0eec49372c",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "john.doe@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "mmmmmmmm"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "mmmmmmmm"
-                                    },
-                                    "token": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "mmmmmmxcvveccvvrv"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Resetting password",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Password reset successful! | Failed to reset password."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
             }
         },
         "/api/auth/register": {
@@ -3030,6 +3195,26 @@
             "description": "Store agents"
         },
         {
+            "name": "Agent Registeration",
+            "description": "Agent Registeration"
+        },
+        {
+            "name": "Agent login",
+            "description": "Agent login"
+        },
+        {
+            "name": "Agent logout",
+            "description": "Agent logout"
+        },
+        {
+            "name": "Forgot Password",
+            "description": "Forgot Password"
+        },
+        {
+            "name": "Resetting Password",
+            "description": "Resetting Password"
+        },
+        {
             "name": "All Amenities",
             "description": "All Amenities"
         },
@@ -3052,26 +3237,6 @@
         {
             "name": "Api Key",
             "description": "Api Key"
-        },
-        {
-            "name": "Agent Registeration",
-            "description": "Agent Registeration"
-        },
-        {
-            "name": "Agent login",
-            "description": "Agent login"
-        },
-        {
-            "name": "Agent logout",
-            "description": "Agent logout"
-        },
-        {
-            "name": "Forgot Password",
-            "description": "Forgot Password"
-        },
-        {
-            "name": "Resetting Password",
-            "description": "Resetting Password"
         },
         {
             "name": "register",

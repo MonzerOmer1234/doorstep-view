@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Agent\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -80,7 +80,9 @@ class AgentRegistrationController extends Controller
         }
 
         // Create the agent
-        $user = User::create($request->all());
+        $userData =$request->all();
+        $userData['user_role'] ='agent';
+        $user = User::create($userData);
         FacadesAuth::login($user);
         $token = $user->createToken($request->name)->plainTextToken;
 

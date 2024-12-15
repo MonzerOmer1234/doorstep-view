@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\AgentController;
+use App\Http\Controllers\Agent\AgentController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\ApiKeyController;
-use App\Http\Controllers\Auth\AgentRegistrationController;
+use App\Http\Controllers\Agent\Auth\AgentRegistrationController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\PropertyController;
@@ -26,6 +26,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Client routes
+
 Route::prefix('/auth')->group(function () {
     // Registeration
     Route::post('/register', [AuthController::class, 'register']);
@@ -38,20 +40,30 @@ Route::prefix('/auth')->group(function () {
     Route::post('/password/forgot', [ResetPasswordController::class, 'forgotPassword']);
 });
 
-// Agents
-Route::apiResource('/agents', AgentController::class)->middleware('auth:sanctum');
+
+// Agent Routes
+Route::post('/agents', [AgentController::class , 'store'])->middleware('auth:sanctum');
 // Agent Registration
 Route::post('/agents/register', [AgentRegistrationController::class, 'register']);
 Route::post('/agents/login', [AgentRegistrationController::class, 'login']);
-Route::post('/agents/logout', [AgentRegistrationController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/agents/password/forgot', [AgentRegistrationController::class, 'forgotPassword'])->middleware('auth:sanctum');
-Route::post('/agents/password/reset', [AgentRegistrationController::class, 'resetPassword'])->middleware('auth:sanctum');
+
+Route::prefix('/agents')->middleware(\App\Http\Middleware\AllowAgent::class)->group(function () {
+    Route::post('/logout', [AgentRegistrationController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/password/forgot', [AgentRegistrationController::class, 'forgotPassword'])->middleware('auth:sanctum');
+    Route::post('/password/reset', [AgentRegistrationController::class, 'resetPassword'])->middleware('auth:sanctum');
+    Route::get('/amenities' , [AmenityController::class , 'index'])->middleware('auth:sanctum');
+    Route::post('/amenities' , [AmenityController::class , 'store'])->middleware('auth:sanctum');
+    Route::put('/amenities/{id}' , [AmenityController::class , 'update'])->middleware('auth:sanctum');
+    Route::delete('/amenities/{id}' , [AmenityController::class , 'destroy'])->middleware('auth:sanctum');
+});
 
 
 
 
 // amenities
-Route::apiResource('/amenities' , AmenityController::class)->middleware('auth:sanctum');
+
+Route::get('/amenities' , [AmenityController::class , 'index'])->middleware('auth:sanctum');
+
 // nearby amenities
 Route::get('properties/{propertyId}/amenities', [AmenityController::class, 'getNearbyAmenities'])->middleware('auth:sanctum');
 
