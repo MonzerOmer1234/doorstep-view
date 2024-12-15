@@ -13,7 +13,7 @@ class ImageController extends Controller
      * @return Response
      */
     #[OA\Post(
-        path: '/api/upload-image',
+        path: '/api/agents/upload-image',
         description: 'Upload an image file',
         tags: ['Image Upload'],
         security : [["bearerAuth" => []]],

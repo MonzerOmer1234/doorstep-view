@@ -25,6 +25,12 @@ class PropertyController extends Controller
         tags: ['All properties'],
         security : [["bearerAuth" => []]],
     )]
+    #[OA\Get(
+        path: '/api/agents/properties',
+        description: 'Get all properties',
+        tags: ['All properties'],
+        security : [["bearerAuth" => []]],
+    )]
     #[OA\Parameter(
         name: 'Authorization',
         in: 'header',
@@ -64,13 +70,15 @@ class PropertyController extends Controller
             'properties' => $properties
         ], 200);
     }
+
+    
     /**
      * creates a new property in the database
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     #[OA\Post(
-        path: '/api/properties',
+        path: '/api/agents/properties',
         description: 'Store a property',
         tags: ['Store a property'],
         security : [["bearerAuth" => []]],
@@ -161,12 +169,24 @@ class PropertyController extends Controller
      */
 
      #[OA\Get(
-        path: '/api/properties/{property}',
+        path: '/api/properties/{id}',
         description: 'Get the details of a property',
         tags: ['The details of a property'],
         security : [["bearerAuth" => []]],
         parameters: [new OA\Parameter(
-            name: "property",
+            name: "id",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+     #[OA\Get(
+        path: '/api/agents/properties/{id}',
+        description: 'Get the details of a property',
+        tags: ['The details of a property'],
+        security : [["bearerAuth" => []]],
+        parameters: [new OA\Parameter(
+            name: "id",
             in: "path",
             required: true,
             schema: new OA\Schema(type: "integer")
@@ -202,10 +222,11 @@ class PropertyController extends Controller
             ]
         )
     )]
-     public function show(Property $property)
+     public function show(string $id)
      {
          // Retrieve the property
 
+         $property = Property::findOrFail($id);
 
          // Increment the view count
          $property->increment('view_count');
@@ -223,7 +244,7 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     #[OA\Patch(
-        path: '/api/properties/{property}',
+        path: '/api/agents/properties/{id}',
         description: 'Update a property',
         tags: ['Update a property'],
         security : [["bearerAuth" => []]],
@@ -240,7 +261,7 @@ class PropertyController extends Controller
             )
                 ),
         parameters: [new OA\Parameter(
-            name: "property",
+            name: "id",
             in: "path",
             required: true,
             schema: new OA\Schema(type: "integer")
@@ -313,12 +334,12 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     #[OA\Delete(
-        path: '/api/properties/{property}',
+        path: '/api/agents/properties/{id}',
         description: 'Delete property',
         tags: ['Deletion of a property'],
         security : [["bearerAuth" => []]],
         parameters: [new OA\Parameter(
-            name: "property",
+            name: "id",
             in: "path",
             required: true,
             schema: new OA\Schema(type: "integer")
@@ -346,64 +367,19 @@ class PropertyController extends Controller
         )
     )]
 
-    public function destroy(Property $property)
+    public function destroy(string $id)
     {
 
+
+
+        $property = Property::findOrFail($id);
         $property->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'Property is deleted successfully',
         ], 200);
     }
-     // Method to feature properties
-     /**
-      * @param Property $property
-      * @return Response
-      */
-      #[OA\Patch(
-        path: '/api/properties/feature/{propertyId}',
-        description: 'Featuring Properties',
-        tags: ['Featuring Properties'],
-        security : [["bearerAuth" => []]],
-        parameters: [new OA\Parameter(
-            name: "propertyId",
-            in: "path",
-            required: true,
-            schema: new OA\Schema(type: "integer")
-            )],
 
-    )]
-    #[OA\Parameter(
-        name: 'Authorization',
-        in: 'header',
-        description: 'Bearer {token}',
-        required: true,
-        schema: new OA\Schema(type: 'string')
-    )]
-
-    #[OA\Response(
-        response: 200,
-        description: 'Featuring properties',
-        content: new OA\JsonContent(
-            type: 'object',
-            properties: [
-
-                new OA\Property(property: 'message', type: 'string', example: 'property is featured successfully!'),
-
-
-            ]
-        )
-    )]
-     public function feature( $propertyId)
-     {
-        $property = Property::findOrFail($propertyId);
-         $property->update(['featured' => true]);
-
-         return response()->json([
-            'message' => 'property is featured successfully',
-            'property' => $property
-         ] , 200);
-     }
       /**
      * specifies the attachment of amenity to property
      * @param string $propertyId
@@ -411,7 +387,7 @@ class PropertyController extends Controller
      * @return Response
      */
     #[OA\Put(
-        path: '/api/properties/attach-amenity/{propertyId}/{amenityId}',
+        path: '/api/agents/properties/attach-amenity/{propertyId}/{amenityId}',
         description: 'attach amenity',
         tags: ['Attach amenities'],
         security : [["bearerAuth" => []]],
@@ -473,7 +449,7 @@ class PropertyController extends Controller
      * @return Response
      */
     #[OA\Delete(
-        path: '/api/properties/detach-amenity/{propertyId}/{amenityId}',
+        path: '/api/agents/properties/detach-amenity/{propertyId}/{amenityId}',
         description: 'attach amenity',
         tags: ['Detach amenities'],
         security : [["bearerAuth" => []]],
@@ -652,6 +628,45 @@ public function nearbyProperties(Request $request)
     ], 200);
 }
 
+/**
+ * Count total feedbacks for a specific property
+ * @param string $propertyId
+ * @return \Illuminate\Http\JsonResponse
+ */
+#[OA\Get(
+    path: '/api/agents/count-property/{propertyId}/feedbacks',
+    description: 'Count total feedbacks for a property',
+    tags: ['Property Feedback Count'],
+    security: [["bearerAuth" => []]],
+    parameters: [
+        new OA\Parameter(
+            name: "propertyId",
+            in: "path",
+            required: true,
+            description: "ID of the property",
+            schema: new OA\Schema(type: "integer")
+        )
+    ]
+)]
+#[OA\Parameter(
+    name: 'Authorization',
+    in: 'header',
+    description: 'Bearer {token}',
+    required: true,
+    schema: new OA\Schema(type: 'string')
+)]
+#[OA\Response(
+    response: 200,
+    description: 'Successfully retrieved feedback count',
+    content: new OA\JsonContent(
+        type: 'object',
+        properties: [
+            new OA\Property(property: 'property_id', type: 'integer', example: 1),
+            new OA\Property(property: 'total_feedback', type: 'integer', example: 5)
+        ]
+    )
+)]
+
 public function countPropertyFeedbacks($propertyId)
 {
     $property = Property::findOrFail($propertyId);
@@ -662,6 +677,46 @@ public function countPropertyFeedbacks($propertyId)
         'total_feedback' => $feedbackCount
     ]);
 }
+
+/**
+ * Count total visitRequests for a specific property
+ * @param string $propertyId
+ * @return \Illuminate\Http\JsonResponse
+ */
+
+#[OA\Get(
+    path: '/api/agents/count-property/{propertyId}/visitRequests',
+    description: 'Count total visit requests for a property',
+    tags: ['Property Vist Request Count'],
+    security: [["bearerAuth" => []]],
+    parameters: [
+        new OA\Parameter(
+            name: "propertyId",
+            in: "path",
+            required: true,
+            description: "ID of the property",
+            schema: new OA\Schema(type: "integer")
+        )
+    ]
+)]
+#[OA\Parameter(
+    name: 'Authorization',
+    in: 'header',
+    description: 'Bearer {token}',
+    required: true,
+    schema: new OA\Schema(type: 'string')
+)]
+#[OA\Response(
+    response: 200,
+    description: 'Successfully retrieved feedback count',
+    content: new OA\JsonContent(
+        type: 'object',
+        properties: [
+            new OA\Property(property: 'property_id', type: 'integer', example: 1),
+            new OA\Property(property: 'total_feedback', type: 'integer', example: 5)
+        ]
+    )
+)]
 public function countPropertyVisitRequests($propertyId)
 {
     $property = Property::findOrFail($propertyId);

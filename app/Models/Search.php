@@ -39,21 +39,16 @@ class Search
             $this->query->where('price', '<=', $filters['price_max']);
         }
 
-        if (!empty($filters['rooms'])) {
-            $this->query->where('rooms', $filters['rooms']);
+        if (!empty($filters['bedrooms'])) {
+            $this->query->where('bedrooms', $filters['bedrooms']);
         }
 
-        if (isset($filters['available'])) {
-            $this->query->where('available', $filters['available'] === 'true');
-        }
 
         if (!empty($filters['area'])) {
             $this->query->where('area', $filters['area']);
         }
 
-        if (!empty($filters['building_age'])) {
-            $this->query->where('building_age', '<=', $filters['building_age']);
-        }
+
 
         return $this->query; // Return the query builder
     }

@@ -54,7 +54,7 @@ class AgentController extends Controller
                     properties: [
                         new OA\Property(property: 'id', type: 'integer', example: 1),
                         new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
-                        new OA\Property(property: 'email', type: 'string', example: 'john.doe@example.com')
+                        new OA\Property(property: 'email', type: 'email', example: 'john.doe@example.com')
                     ]
                 )
             ]

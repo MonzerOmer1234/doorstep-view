@@ -23,34 +23,7 @@ class AmenityController extends Controller
         tags: ['All Amenities'],
         security : [["bearerAuth" => []]],
     )]
-    // #[OA\Parameter(
-    //     name: 'Authorization',
-    //     in: 'header',
-    //     description: 'Bearer {token}',
-    //     required: true,
-    //     schema: new OA\Schema(type: 'string')
-    // )]
-    // #[OA\Response(
-    //     response: 200,
-    //     description: 'Fetching all amenities',
-    //     content: new OA\JsonContent(
-    //         type: 'object',
-    //         properties: [
-    //             new OA\Property(property: 'status', type: 'string', example: 'success'),
-    //             new OA\Property(property: 'message', type: 'string', example: 'amenities are fetched successfully!'),
 
-    //             new OA\Property(
-    //                 property: 'amenities',
-    //                 type: 'object',
-    //                 properties: [
-    //                     new OA\Property(property: 'name', type: 'integer', example:  'wifi'),
-    //                     new OA\Property(property: 'icon', type: 'string', example: 'icon'),
-    //                     new OA\Property(property: 'category', type: 'string', example: 'category 1')
-    //                 ]
-    //             )
-    //         ]
-    //     )
-    // )]
 
     #[OA\Get(
         path: '/api/agents/amenities',
@@ -125,7 +98,7 @@ class AmenityController extends Controller
             schema: new OA\Schema(type: 'string')
         )]
     #[OA\Post(
-        path: '/api/amenities',
+        path: '/api/agents/amenities',
         description: 'craete an amenity',
         tags: ['Create an amenity'],
         security : [["bearerAuth" => []]],
@@ -191,7 +164,7 @@ class AmenityController extends Controller
      * @return Response
      */
     #[OA\Put(
-        path: '/api/amenities/{id}',
+        path: '/api/agents/amenities/{id}',
         description: 'Update amenity',
         tags: ['Update amenity'],
         security : [["bearerAuth" => []]],
@@ -205,7 +178,7 @@ class AmenityController extends Controller
             )
                 ),
         parameters: [new OA\Parameter(
-            name: "amenity",
+            name: "id",
             in: "path",
             required: true,
             schema: new OA\Schema(type: "integer")
@@ -263,13 +236,13 @@ class AmenityController extends Controller
      * @return Response
      */
     #[OA\Delete(
-        path: '/api/amenities/{id}',
+        path: '/api/agents/amenities/{id}',
         description: 'Deleting amenity',
         tags: ['Delete amenity'],
         security : [["bearerAuth" => []]],
 
         parameters: [new OA\Parameter(
-            name: "amenity",
+            name: "id",
             in: "path",
             required: true,
             schema: new OA\Schema(type: "integer")

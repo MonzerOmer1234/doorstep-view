@@ -18,6 +18,60 @@ class SearchController extends Controller
         tags: ['Search Properties'],
         security: [["bearerAuth" => []]],
     )]
+    #[OA\Get(
+        path: '/api/agents/search/properties',
+        description: 'Search Properties',
+        tags: ['Search Properties'],
+        security: [["bearerAuth" => []]],
+
+    )]
+
+    #[OA\Parameter(
+        name: "user_id",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "integer")
+    )]
+    #[OA\Parameter(
+        name: "status",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "string")
+    )]
+    #[OA\Parameter(
+        name: "title",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "string")
+    )]
+
+    #[OA\Parameter(
+        name: "price_min",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "integer")
+    )]
+    #[OA\Parameter(
+        name: "price_max",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "integer")
+    )]
+    #[OA\Parameter(
+        name: "bedrooms",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "integer")
+    )]
+   
+    #[OA\Parameter(
+        name: "area",
+        in: "query",
+        required: false,
+        schema: new OA\Schema(type: "integer")
+    )]
+
+
     #[OA\Parameter(
         name: 'Authorization',
         in: 'header',

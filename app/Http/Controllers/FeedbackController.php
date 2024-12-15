@@ -96,7 +96,7 @@ class FeedbackController extends Controller
      * @return Response
      */
     #[OA\Get(
-        path: '/api/properties/{propertyId}/feedback',
+        path: '/api/agents/properties/{propertyId}/feedback',
         description: 'Get feedbacks for property',
         tags: ['Get Feedback about property'],
         security : [["bearerAuth" => []]],
@@ -156,5 +156,5 @@ class FeedbackController extends Controller
             ] , 200);
      }
 
-     
+
 }
