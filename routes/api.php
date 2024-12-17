@@ -50,6 +50,8 @@ Route::prefix('/agents')->middleware(\App\Http\Middleware\AllowAgent::class)->gr
     Route::post('/properties' , [PropertyController::class , 'store'])->middleware('auth:sanctum');
     Route::put('/properties/{id}' , [PropertyController::class , 'update'])->middleware('auth:sanctum');
     Route::delete('/properties/{id}' , [PropertyController::class , 'destroy'])->middleware('auth:sanctum');
+    Route::get('/property/most-viewed' , [PropertyController::class , 'getMostViewedProperty'])->middleware('auth:sanctum');
+
     #agent properties-amenities
     Route::put('/properties/attach-amenity/{propertyId}/{amenityId}' , [PropertyController::class , 'attachAmenity'])->middleware('auth:sanctum');
     Route::delete('/properties/detach-amenity/{propertyId}/{amenityId}' , [PropertyController::class , 'detachAmenity'])->middleware('auth:sanctum');
@@ -68,6 +70,9 @@ Route::prefix('/agents')->middleware(\App\Http\Middleware\AllowAgent::class)->gr
 
     // agent  - seraching
     Route::get('/search/properties', [SearchController::class, 'search'])->middleware('auth:sanctum');
+
+    // Agent - visit requests
+    Route::put('/visit-request/approve/{id}' , [VisitRequestController::class , 'approveVisitRequest'])->middleware('auth:sanctum');
 });
 
 
@@ -130,6 +135,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/properties', [PropertyController::class , 'index'])->middleware('auth:sanctum');
 Route::get('/properties/{id}' , [PropertyController::class , 'show'])->middleware('auth:sanctum');
+
 
 
 Route::get('/properties/nearby/{latitude}/{longitude}/{radius?}', [PropertyController::class, 'nearbyProperties'])->middleware('auth:sanctum');

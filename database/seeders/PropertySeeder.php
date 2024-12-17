@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Property;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker; 
+use Faker\Factory as Faker;
 
 class PropertySeeder extends Seeder
 {
@@ -40,7 +40,7 @@ class PropertySeeder extends Seeder
                 'area' => $faker->numberBetween(500, 5000), // Random area between 500 and 5000 sq ft
                 'property_type' => $faker->randomElement(['apartment', 'villa', 'house', 'studio']), // Random property type
                 'status' => $faker->randomElement(['available', 'sold']), // Random status
-                'views' => $faker->numberBetween(0, 1000), // Random number of views
+                 
                 'latitude' => $latitude, // Generated latitude
                 'longitude' => $longitude, // Generated longitude
                 'neighborhood' => $faker->word(), // Random neighborhood name

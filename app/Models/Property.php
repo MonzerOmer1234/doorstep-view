@@ -106,6 +106,7 @@ public function favorites()
     public function feedbacks(){
         return $this->hasMany(Feedback::class);
     }
+   
     public function getTotalFeedback()
     {
         return $this->feedbacks()->count();

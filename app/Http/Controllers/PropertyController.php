@@ -71,7 +71,7 @@ class PropertyController extends Controller
         ], 200);
     }
 
-    
+
     /**
      * creates a new property in the database
      * @param Request $request
@@ -228,6 +228,7 @@ class PropertyController extends Controller
 
          $property = Property::findOrFail($id);
 
+
          // Increment the view count
          $property->increment('view_count');
 
@@ -235,6 +236,7 @@ class PropertyController extends Controller
         return response()->json([
             'success' => true,
             'data' => $property,
+
         ] , 200);
      }
     /**
@@ -315,6 +317,7 @@ class PropertyController extends Controller
             'area' => 'nullable|integer',
             'property_type' => 'nullable|string',
             'status' => 'in:available,sold,reserved',
+            'discount' =>  'numeric | nullable'
         ]);
 
         if ($validator->fails()) {
@@ -727,7 +730,56 @@ public function countPropertyVisitRequests($propertyId)
         'total_visit_requests' => $totalVisitRequests
     ]);
 }
+#[OA\Get(
+    path: '/api/agents/property/most-viewed',
+    description: 'Get the most viewed property',
+    tags: ['Property most viewed'],
+    security: [["bearerAuth" => []]],
 
+)]
+#[OA\Parameter(
+    name: 'Authorization',
+    in: 'header',
+    description: 'Bearer {token}',
+    required: true,
+    schema: new OA\Schema(type: 'string')
+)]
+#[OA\Response(
+    response: 200,
+    description: 'Successfully retrieved the most viewed property',
+    content: new OA\JsonContent(
+        type: 'object',
+        properties: [
+            new OA\Property(property: 'message', type: 'string', example: "success"),
+            new OA\Property(
+                property: 'property',
+                type: 'object',
+                properties: [
+                    new OA\Property(property: 'location', type: 'string', example:  'Egypt'),
+                    new OA\Property(property: 'property_type', type: 'string', example: 'villa'),
+                    new OA\Property(property: 'bedrooms', type: 'integer', example: 3),
+                    new OA\Property(property: 'bathrooms', type: 'integer', example: 10),
 
+                ]
+            )
+        ]
+    )
+)]
+public function getMostViewedProperty(){
+    // Get the property with the most views, ordered in descending order by views
+    $property = Property::orderBy('view_count', 'desc')->first();
+
+    // If no property is found, return a 404 response
+    if (!$property) {
+        return response()->json(['message' => 'No property found'], 404);
+    }
+
+    return response()->json([
+        'message' => 'success',
+        'property' =>  $property
+    ]);
+}
 
 }
+
+

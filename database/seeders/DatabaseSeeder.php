@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PropertySeeder::class,
             AmenitySeeder::class,
             PropertyAmenitySeeder::class,
+            VisitRequestsTableSeeder::class
         ]);
     }
 }

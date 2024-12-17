@@ -15,7 +15,8 @@ class VisitRequest extends Model
         'status',
         'visitor_name',
         'visitor_email',
-        'visit_date'
+        'visit_date',
+        'access_code'
     ];
 
     public function property()

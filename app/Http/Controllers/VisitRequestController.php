@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\VisitRequest;
 use App\Models\Property;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 use OpenApi\Attributes as OA;
 
 class VisitRequestController extends Controller
@@ -221,7 +221,80 @@ class VisitRequestController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Visit request deleted successfully'
+            'message' => 'Visit request is deleted successfully'
         ]);
+    }
+
+
+    #[OA\Put(
+        path: '/api/agents/visit-request/approve/{id}',
+        description: 'Approve Visit Request',
+        tags: ['Approve Visit Request'],
+        security : [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+
+                    new OA\Property(property: 'access_code', type: 'string', example: '980olkj')
+                ]
+            )
+                ),
+        parameters: [new OA\Parameter(
+            name: "id",
+            in: "path",
+            required: true,
+            schema: new OA\Schema(type: "integer")
+        )],
+    )]
+    #[OA\Parameter(
+        name: 'Authorization',
+        in: 'header',
+        description: 'Bearer {token}',
+        required: true,
+        schema: new OA\Schema(type: 'string')
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Approving a visit request',
+        content: new OA\JsonContent(
+            type: 'object',
+            properties: [
+                new OA\Property(property: 'status', type: 'string', example: 'success'),
+                new OA\Property(property: 'message', type: 'string', example: 'The visit request has been approved successfully!'),
+
+                new OA\Property(
+                    property: 'viist_request',
+                    type: 'object',
+                    properties: [
+                        new OA\Property(property: 'visitor_name', type: 'string', example: 'mo'),
+                        new OA\Property(property: 'visitor_email', type: 'string', example: 'monzeromer048@gmail.com'),
+
+                    ]
+                )
+            ]
+        )
+    )]
+    public function approveVisitRequest(Request $request, string $id)
+    {
+        //
+        $visitRequest = VisitRequest::findOrFail($id);
+        $fields = $request->validate([
+            'access_code' => 'required | min:6',
+
+        ]);
+        $visitRequest->update([
+            'access_code' => $request->access_code,
+            'status' => 'approved'
+
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The visitRequest has been approved',
+            'visit_request' => $visitRequest,
+            
+        ] , 200);
+
     }
 }

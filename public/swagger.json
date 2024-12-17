@@ -2657,6 +2657,70 @@
                 ]
             }
         },
+        "/api/agents/property/most-viewed": {
+            "get": {
+                "tags": [
+                    "Property most viewed"
+                ],
+                "description": "Get the most viewed property",
+                "operationId": "389e84c3ed74cbb7253c03b29024c0d8",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved the most viewed property",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "property": {
+                                            "properties": {
+                                                "location": {
+                                                    "type": "string",
+                                                    "example": "Egypt"
+                                                },
+                                                "property_type": {
+                                                    "type": "string",
+                                                    "example": "villa"
+                                                },
+                                                "bedrooms": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "bathrooms": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/recommendations/{propertyId}": {
             "get": {
                 "tags": [
@@ -3706,6 +3770,90 @@
                     }
                 ]
             }
+        },
+        "/api/agents/visit-request/approve/{id}": {
+            "put": {
+                "tags": [
+                    "Approve Visit Request"
+                ],
+                "description": "Approve Visit Request",
+                "operationId": "e2905553e01acd64bc3918d187886f2b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "access_code": {
+                                        "type": "string",
+                                        "example": "980olkj"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Approving a visit request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The visit request has been approved successfully!"
+                                        },
+                                        "viist_request": {
+                                            "properties": {
+                                                "visitor_name": {
+                                                    "type": "string",
+                                                    "example": "mo"
+                                                },
+                                                "visitor_email": {
+                                                    "type": "string",
+                                                    "example": "monzeromer048@gmail.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -3894,6 +4042,10 @@
             "description": "Property Vist Request Count"
         },
         {
+            "name": "Property most viewed",
+            "description": "Property most viewed"
+        },
+        {
             "name": "All Recommendations",
             "description": "All Recommendations"
         },
@@ -3932,6 +4084,10 @@
         {
             "name": "Deletion of a visit request",
             "description": "Deletion of a visit request"
+        },
+        {
+            "name": "Approve Visit Request",
+            "description": "Approve Visit Request"
         }
     ]
 }
