@@ -81,7 +81,7 @@ class AgentRegistrationController extends Controller
 
         // Create the agent
         $userData =$request->all();
-        $userData['user_role'] ='agent';
+        $userData['user_type'] ='agent';
         $user = User::create($userData);
         FacadesAuth::login($user);
         $token = $user->createToken($request->name)->plainTextToken;

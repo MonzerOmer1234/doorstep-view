@@ -17,7 +17,7 @@ class AllowAgent
     {
         $user = $request->user();
 
-        if (! $user || $user->user_role != "agent") {
+        if (! $user || $user->user_type != "agent") {
             abort(403, 'Unauthorized');
         }
 

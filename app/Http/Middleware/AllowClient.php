@@ -17,7 +17,7 @@ class AllowClient
     {
         $user = $request->user();
 
-        if (! $user || $user->user_role != "client") {
+        if (! $user || $user->user_type != "client") {
             abort(403, 'Unauthorized');
         }
 

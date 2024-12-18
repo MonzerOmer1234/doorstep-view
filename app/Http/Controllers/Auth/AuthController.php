@@ -70,7 +70,7 @@ class AuthController extends Controller
         ]);
 
         $userData =$request->all();
-        $userData['user_role'] ='client';
+        $userData['user_type'] ='client';
         $user = User::create($userData);
         FacadesAuth::login($user);
         $token = $user->createToken($request->name)->plainTextToken;
