@@ -85,7 +85,7 @@
         <div class="property-header row justify-content-between align-items-start">
             <div class="col-sm-6 col-lg-8">
                 <img src="{{ asset('storage/images/view.jpg') }}" alt="Property Image" style="max-width: 100%"
-                    class="mb-4" width="100%">
+                    class="mb-4" width="auto">
             </div>
             <div class="offset-sm-2 col-sm-4 col-lg-2">
                 <div class="property-header-content">
@@ -119,30 +119,23 @@
                          <span >{{$property->bedrooms}}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
-                         <span>Lounges</span>
-                         <span >2</span>
+                         <span>Bathrooms</span>
+                         <span >{{$property->bathrooms}}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
-                         <span>Toilets</span>
-                         <span >2</span>
+                         <span>Type</span>
+                         <span >{{$property->property_type}}</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
-                         <span>Category</span>
-                         <span >Families</span>
-                        </li>
+
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
                          <span>Space</span>
                          <span >{{$property->area}} m <sup>2</sup></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
-                         <span>Coverage</span>
-                         <span >5G</span>
+                         <span>Status</span>
+                         <span >{{$property->status}}</span>
                         </li>
-                        {{-- <li class="list-group-item">Lounges: 2</li>
-                        <li class="list-group-item">Toilets: 2</li>
-                        <li class="list-group-item">Category: Families</li>
-                        <li class="list-group-item">Space: 120 m²</li>
-                        <li class="list-group-item">Coverage: 5G</li> --}}
+
                     </ul>
                 </div>
             </div>
@@ -167,7 +160,7 @@
                            </li>
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
                             <span>Search Times</span>
-                            <span></span>
+                            <span>{{$property->search_count}}</span>
 
                            </li>
                         {{-- <li class="list-group-item">Actual Visits: N/A</li>
@@ -180,28 +173,19 @@
                 <div class="amenities">
                     <h5>Amenities</h5>
 
-                            <div class="form-check d-flex justify-content-between p-0">
-                                <label class="form-check-label" for="schools">Schools</label>
-                                <input class="form-check-input" type="checkbox" id="schools" checked  >
-                            </div>
+                 @foreach ($nearbyAmenities as $amenity )
+
+                 
+                 <div class="form-check d-flex justify-content-between p-0">
+                     <label class="form-check-label" for="amenity">{{$amenity->name}}</label>
+                     <input class="form-check-input" type="checkbox" id="amenity" checked  >
+                 </div>
+                   @endforeach
 
 
-                            <div class="form-check d-flex justify-content-between p-0">
-                                <label class="form-check-label" for="hospitals">Hospitals</label>
-                                <input class="form-check-input" type="checkbox" id="hospitals" checked >
-                            </div>
 
 
-                            <div class="form-check d-flex justify-content-between p-0">
-                                <label class="form-check-label" for="parks">Parks</label>
-                                <input class="form-check-input" type="checkbox" id="parks" checked >
-                            </div>
 
-
-                            <div class="form-check d-flex justify-content-between p-0">
-                                <label class="form-check-label" for="mosque">Mosque</label>
-                                <input class="form-check-input" type="checkbox" id="mosque" checked >
-                            </div>
 
                         <!-- Add more amenities as needed -->
                     </div>

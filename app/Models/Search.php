@@ -12,16 +12,19 @@ class Search
     {
         // Initialize the query with the Property model
         $this->query = Property::query();
+
     }
 
     public function filter(array $filters): Collection
     {
         // If no filters are provided, return all properties
         if (empty($filters)) {
+            $this->query->increment('search_count');
             return $this->query->get(); // Return all properties directly
         }
 
         // Apply filters and fetch results
+        $this->applyFilters($filters)->increment('search_count');
         return $this->applyFilters($filters)->get();
     }
 
@@ -29,6 +32,7 @@ class Search
     {
         if (!empty($filters['title'])) {
             $this->query->where('title', 'LIKE', '%' . $filters['title'] . '%');
+
         }
 
         if (!empty($filters['price_min'])) {
