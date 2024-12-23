@@ -5,6 +5,7 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Models\Amenity;
 use App\Models\Property;
+use App\Models\VisitRequest;
 use Illuminate\Http\Request;
 
 class PropertyController extends Controller
@@ -21,9 +22,13 @@ class PropertyController extends Controller
     ", [$property->latitude, $property->longitude, $property->latitude])
     ->having('distance', '<=', 5)
     ->orderBy('distance', 'asc')->get();
+    $actualVisits = VisitRequest::selectRaw('id')->where('property_id' , $propertyId)
+    ->where('status' , 'approved')
+    ->get()
+    ->count();
 
 
-    return view('property.show', compact('property' , 'nearbyAmenities'));
+    return view('property.show', compact('property' , 'nearbyAmenities' , 'actualVisits'));
 }
 
 }

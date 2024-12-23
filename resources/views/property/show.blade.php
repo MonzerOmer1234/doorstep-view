@@ -150,7 +150,7 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
                             <span>Actual Visits</span>
-                            <span></span>
+                            <span>{{$actualVisits}}</span>
 
                            </li>
                         <li class="list-group-item d-flex justify-content-between mb-3" style="background: rgba(66, 66, 74, 0.17);">
@@ -175,7 +175,7 @@
 
                  @foreach ($nearbyAmenities as $amenity )
 
-                 
+
                  <div class="form-check d-flex justify-content-between p-0">
                      <label class="form-check-label" for="amenity">{{$amenity->name}}</label>
                      <input class="form-check-input" type="checkbox" id="amenity" checked  >

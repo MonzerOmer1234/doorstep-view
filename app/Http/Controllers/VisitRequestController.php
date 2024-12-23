@@ -293,8 +293,9 @@ class VisitRequestController extends Controller
             'status' => 'success',
             'message' => 'The visitRequest has been approved',
             'visit_request' => $visitRequest,
-            
+
         ] , 200);
 
     }
+    
 }
